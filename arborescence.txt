@@ -1,0 +1,142 @@
+Structure du dossier
+Le numéro de série du volume est C2F1-B082
+C:\USERS\JLEMK\ONEDRIVE\DOCUMENTS\GESTIONBIBLIOTHEQUE
+|   arborescence.txt
+|   pom.xml
+|   README.md
+|   
++---.idea
+|       .gitignore
+|       compiler.xml
+|       encodings.xml
+|       GestionBibliotheque.iml
+|       jarRepositories.xml
+|       misc.xml
+|       workspace.xml
+|       
++---database
+|       schema_postgresql.sql
+|       
++---src
+|   \---main
+|       +---java
+|       |   \---com
+|       |       \---ead
+|       |           \---bibliotheque
+|       |               |   MainApp.java
+|       |               |   
+|       |               +---controllers
+|       |               |       AdherentsController.java
+|       |               |       CatalogueController.java
+|       |               |       DashboardController.java
+|       |               |       EmpruntsController.java
+|       |               |       LoginController.java
+|       |               |       MenuPrincipalController.java
+|       |               |       RetardsController.java
+|       |               |       
+|       |               +---dao
+|       |               |       AdherentDAO.java
+|       |               |       AdministrateurDAO.java
+|       |               |       EmpruntDAO.java
+|       |               |       LivreDAO.java
+|       |               |       RetardDAO.java
+|       |               |       
+|       |               +---models
+|       |               |       Adherent.java
+|       |               |       Administrateur.java
+|       |               |       Emprunt.java
+|       |               |       Livre.java
+|       |               |       Retard.java
+|       |               |       
+|       |               +---util
+|       |               |       DatabaseConnection.java
+|       |               |       InitAdministrateur.java
+|       |               |       SessionManager.java
+|       |               |       
+|       |               \---{controllers,models,dao,util}
+|       \---resources
+|           \---com
+|               \---ead
+|                   \---bibliotheque
+|                       +---css
+|                       |       styles.css
+|                       |       
+|                       +---fxml
+|                       |       adherents.fxml
+|                       |       catalogue.fxml
+|                       |       dashboard.fxml
+|                       |       emprunts.fxml
+|                       |       login.fxml
+|                       |       menu_principal.fxml
+|                       |       retards.fxml
+|                       |       
+|                       +---images
+|                       |       logo_ead.png
+|                       |       
+|                       \---{fxml,css}
+\---target
+    +---classes
+    |   \---com
+    |       \---ead
+    |           \---bibliotheque
+    |               |   MainApp.class
+    |               |   
+    |               +---controllers
+    |               |       AdherentsController.class
+    |               |       CatalogueController.class
+    |               |       DashboardController.class
+    |               |       EmpruntsController$1.class
+    |               |       EmpruntsController$2.class
+    |               |       EmpruntsController$3.class
+    |               |       EmpruntsController.class
+    |               |       LoginController.class
+    |               |       MenuPrincipalController.class
+    |               |       RetardsController$1.class
+    |               |       RetardsController$2.class
+    |               |       RetardsController.class
+    |               |       
+    |               +---css
+    |               |       styles.css
+    |               |       
+    |               +---dao
+    |               |       AdherentDAO.class
+    |               |       AdministrateurDAO.class
+    |               |       EmpruntDAO.class
+    |               |       LivreDAO.class
+    |               |       RetardDAO.class
+    |               |       
+    |               +---fxml
+    |               |       adherents.fxml
+    |               |       catalogue.fxml
+    |               |       dashboard.fxml
+    |               |       emprunts.fxml
+    |               |       login.fxml
+    |               |       menu_principal.fxml
+    |               |       retards.fxml
+    |               |       
+    |               +---images
+    |               |       logo_ead.png
+    |               |       
+    |               +---models
+    |               |       Adherent.class
+    |               |       Administrateur.class
+    |               |       Emprunt$Statut.class
+    |               |       Emprunt.class
+    |               |       Livre.class
+    |               |       Retard$Severite.class
+    |               |       Retard.class
+    |               |       
+    |               \---util
+    |                       DatabaseConnection.class
+    |                       InitAdministrateur.class
+    |                       SessionManager.class
+    |                       
+    +---generated-sources
+    |   \---annotations
+    \---maven-status
+        \---maven-compiler-plugin
+            \---compile
+                \---default-compile
+                        createdFiles.lst
+                        inputFiles.lst
+                        

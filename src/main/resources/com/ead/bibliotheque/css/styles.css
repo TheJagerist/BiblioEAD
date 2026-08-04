@@ -1,0 +1,333 @@
+.fond-connexion {
+    -fx-background-color: #f4f4f5;
+}
+
+.carte-connexion {
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 2);
+}
+
+.zone-logo {
+    -fx-background-color: white;
+    -fx-border-color: #333333;
+    -fx-border-width: 1.5;
+}
+
+.titre-connexion {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.label-erreur {
+    -fx-text-fill: #c62828;
+    -fx-font-size: 12px;
+}
+
+.bouton-principal {
+    -fx-background-color: white;
+    -fx-border-color: #333333;
+    -fx-border-width: 1.2;
+    -fx-padding: 8 24 8 24;
+    -fx-font-weight: bold;
+}
+
+.bouton-principal:hover {
+    -fx-background-color: #eeeeee;
+}
+
+.fond-application {
+    -fx-background-color: #f4f4f5;
+}
+
+.barre-laterale {
+    -fx-background-color: white;
+    -fx-border-color: transparent #cccccc transparent transparent;
+    -fx-border-width: 1;
+}
+
+.titre-module {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+    -fx-border-color: #333333;
+    -fx-border-width: 1.2;
+    -fx-alignment: center;
+}
+
+.lien-navigation {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.sous-lien {
+    -fx-padding: 0 0 0 20;
+}
+
+.barre-actions {
+    -fx-background-color: #f4f4f5;
+    -fx-border-color: transparent transparent transparent #cccccc;
+    -fx-border-width: 1;
+}
+
+.bouton-action {
+    -fx-background-color: white;
+    -fx-border-color: #333333;
+    -fx-border-width: 1.2;
+    -fx-font-weight: bold;
+    -fx-padding: 14 10 14 10;
+}
+
+.bouton-action:hover {
+    -fx-background-color: #eeeeee;
+}
+
+.login-logo {
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+.login-logo-wrapper {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
+    -fx-padding: 10;
+}
+
+/* ── Dashboard KPI cards ── */
+.kpi-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-border-radius: 10;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1;
+}
+.kpi-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #888888;
+}
+.kpi-val {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+.kpi-val-green  { -fx-text-fill: #2e7d32; }
+.kpi-val-blue   { -fx-text-fill: #0277bd; }
+.kpi-val-amber  { -fx-text-fill: #e65100; }
+.kpi-val-red    { -fx-text-fill: #c62828; }
+
+/* ── Section label ── */
+.section-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+    -fx-letter-spacing: 1.2px;
+}
+
+/* ── Table card (dashboard) ── */
+.table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-border-radius: 10;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1;
+}
+.table-card-header {
+    -fx-border-color: transparent transparent #eeeeee transparent;
+    -fx-border-width: 1;
+}
+/* ── Champ de recherche / saisie générique ── */
+.champ-recherche {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 12px;
+}
+.champ-recherche:focused {
+    -fx-border-color: #333333;
+}
+
+/* ── Bouton danger (supprimer) ── */
+.bouton-action-danger {
+    -fx-background-color: white;
+    -fx-border-color: #c62828;
+    -fx-border-width: 1.2;
+    -fx-text-fill: #c62828;
+    -fx-padding: 8 14 8 14;
+    -fx-font-weight: bold;
+}
+.bouton-action-danger:hover {
+    -fx-background-color: #fdecea;
+}
+
+/* ── Label de champ formulaire ── */
+.form-field-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #777777;
+    -fx-letter-spacing: 0.6px;
+}
+
+/* ── Champ auto (n° carte verrouillé) ── */
+.champ-auto {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+/* ── Panneau latéral ── */
+.panneau-lateral {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent transparent #cccccc;
+    -fx-border-width: 1;
+}
+.panneau-lateral-header {
+    -fx-border-color: transparent transparent #eeeeee transparent;
+    -fx-border-width: 1;
+}
+.panneau-lateral-footer {
+    -fx-border-color: #eeeeee transparent transparent transparent;
+    -fx-border-width: 1;
+}
+/* ── Spinner ── */
+.spinner .text-field {
+    -fx-background-color: white;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+/* Bloc de vérification RG dans le panneau latéral */
+.verif-bloc {
+    -fx-background-color: #f0f4f8;
+    -fx-background-radius: 7;
+    -fx-border-color: #d0d8e4;
+    -fx-border-radius: 7;
+    -fx-border-width: 1;
+}
+
+/* TabPane emprunts */
+.emprunts-tabpane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: white;
+}
+/* ============================================================
+   IDENTITÉ ÉDITORIALE — Dashboard
+   ============================================================ */
+
+.fond-application {
+    -fx-rouge-ead: #CC0000;
+    -fx-rouge-ead-clair: #FCEBEB;
+    -fx-rouge-ead-texte: #A32D2D;
+    -fx-bleu-ead: #5BB8D4;
+    -fx-bleu-ead-clair: #E6F3F8;
+    -fx-bleu-ead-texte: #2E7A98;
+    -fx-gris-carte: #fafafa;
+}
+
+.page-titre {
+    -fx-font-family: "Georgia";
+    -fx-font-size: 23px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
+.page-sous-titre {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9a9a9a;
+}
+
+/* Cartes "dos de livre" */
+.carte-dos-livre {
+    -fx-background-color: -fx-gris-carte;
+    -fx-background-radius: 0 12 12 0;
+    -fx-border-width: 0 0 0 3;
+}
+.carte-dos-livre-bleu  { -fx-border-color: -fx-bleu-ead; }
+.carte-dos-livre-rouge { -fx-border-color: -fx-rouge-ead; }
+
+.carte-label { -fx-font-size: 12px; -fx-text-fill: #8a8a8a; }
+.carte-icone-bleu  { -fx-font-size: 14px; -fx-text-fill: -fx-bleu-ead-texte; }
+.carte-icone-rouge { -fx-font-size: 14px; -fx-text-fill: -fx-rouge-ead; }
+.carte-val { -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.carte-val-rouge { -fx-text-fill: -fx-rouge-ead; }
+.carte-val-moyen { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.carte-val-suffixe { -fx-font-size: 13px; -fx-text-fill: #aaaaaa; }
+.carte-pied { -fx-font-size: 10px; -fx-text-fill: #aaaaaa; }
+
+.spark-barre {
+    -fx-background-color: -fx-bleu-ead;
+    -fx-background-radius: 2 2 0 0;
+    -fx-min-width: 6;
+}
+
+.badge-danger {
+    -fx-background-color: -fx-rouge-ead-clair;
+    -fx-text-fill: -fx-rouge-ead-texte;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 4;
+}
+
+/* Cartes plates */
+.carte-plate { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
+
+.avatar-mini {
+    -fx-min-width: 22; -fx-pref-width: 22; -fx-max-width: 22;
+    -fx-min-height: 22; -fx-pref-height: 22; -fx-max-height: 22;
+    -fx-background-color: white;
+    -fx-background-radius: 11;
+    -fx-border-color: #e2e2e2;
+    -fx-border-radius: 11;
+    -fx-font-size: 9px;
+    -fx-text-fill: #888888;
+    -fx-alignment: center;
+}
+
+.barre-progression-fond { -fx-background-color: #eeeeee; -fx-background-radius: 2; }
+.barre-progression-remplissage { -fx-background-color: -fx-bleu-ead; -fx-background-radius: 2; }
+
+.stat-label { -fx-font-size: 12px; -fx-text-fill: #9a9a9a; }
+.stat-val { -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+
+/* Timeline */
+.carte-timeline { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
+.lien-voir-tout {
+    -fx-font-size: 11px; -fx-font-weight: bold;
+    -fx-text-fill: -fx-bleu-ead-texte; -fx-cursor: hand;
+}
+.puce-bleu  { -fx-fill: -fx-bleu-ead;  -fx-stroke: transparent; }
+.puce-rouge { -fx-fill: -fx-rouge-ead; -fx-stroke: transparent; }
+.puce-gris  { -fx-fill: #cccccc;       -fx-stroke: transparent; }
+.ligne-timeline { -fx-background-color: #e5e5e5; -fx-min-width: 1; -fx-max-width: 1; }
+.timeline-nom { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.timeline-meta { -fx-font-size: 11px; -fx-text-fill: #9a9a9a; }
+.timeline-meta-bleu  { -fx-font-size: 11px; -fx-text-fill: -fx-bleu-ead-texte; }
+.timeline-meta-rouge { -fx-font-size: 11px; -fx-text-fill: -fx-rouge-ead; }
+
+/* Genres */
+.carte-genres { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
+.genre-nom { -fx-font-size: 11px; -fx-text-fill: #8a8a8a; }
+.genre-pourcentage { -fx-font-size: 11px; -fx-text-fill: #aaaaaa; }
+.barre-genre-fond { -fx-background-color: #eeeeee; -fx-background-radius: 0 4 4 0; -fx-border-width: 0 0 0 3; }
+.barre-genre-fond-rouge { -fx-border-color: -fx-rouge-ead; }
+.barre-genre-fond-bleu  { -fx-border-color: -fx-bleu-ead; }
+.barre-genre-fond-gris  { -fx-border-color: #cccccc; }
+.barre-genre-remplissage-rouge { -fx-background-color: -fx-rouge-ead-clair; -fx-background-radius: 0 4 4 0; }
+.barre-genre-remplissage-bleu  { -fx-background-color: -fx-bleu-ead-clair;  -fx-background-radius: 0 4 4 0; }
+.barre-genre-remplissage-gris  { -fx-background-color: #f0f0f0;             -fx-background-radius: 0 4 4 0; }
+
+/* Sidebar : item actif en rouge au lieu du vert */
+.lien-navigation-actif {
+    -fx-border-width: 0 0 0 3;
+    -fx-border-color: -fx-rouge-ead;
+    -fx-background-color: -fx-gris-carte;
+}

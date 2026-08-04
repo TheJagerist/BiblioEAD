@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane prefHeight="560" prefWidth="900" styleClass="login-root" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ead.bibliotheque.controllers.LoginController">
+
+    <!-- Carte centrale split -->
+    <HBox alignment="CENTER" styleClass="login-card">
+
+        <!-- ===== PANNEAU GAUCHE : Formulaire ===== -->
+        <VBox alignment="CENTER" spacing="18" styleClass="login-panel-left" HBox.hgrow="ALWAYS">
+            <padding><Insets bottom="48" left="56" right="56" top="48" /></padding>
+
+            <!-- Logo EAD -->
+            <StackPane prefHeight="94.0" prefWidth="21.0" styleClass="login-logo-wrapper">
+                <ImageView fitHeight="72" fitWidth="72.0" preserveRatio="true">
+                    <image><Image url="@../images/logo_ead.png" /></image>
+                </ImageView>
+            </StackPane>
+
+            <!-- Titre -->
+            <Label styleClass="login-title" text="Connexion" />
+            <Label styleClass="login-subtitle" text="Bibliothèque EAD — Groupe 4" />
+
+            <!-- Champ identifiant -->
+            <VBox spacing="4">
+                <Label styleClass="login-field-label" text="Identifiant" />
+                <TextField fx:id="usernameField" prefWidth="280" promptText="Entrez votre identifiant" styleClass="login-field" />
+            </VBox>
+
+            <!-- Champ mot de passe -->
+            <VBox spacing="4">
+                <Label styleClass="login-field-label" text="Mot de passe" />
+                <PasswordField fx:id="passwordField" prefWidth="280" promptText="••••••••" styleClass="login-field" />
+            </VBox>
+
+            <!-- Message d'erreur (caché par défaut) -->
+            <Label fx:id="errorLabel" managed="false" maxWidth="280" styleClass="login-error" text="" visible="false" wrapText="true" />
+
+            <!-- Bouton connexion -->
+            <Button fx:id="loginButton" defaultButton="true" onAction="#onSoumettre" prefWidth="280" styleClass="btn-login" text="SE CONNECTER" />
+
+            <Hyperlink styleClass="login-link" text="Mot de passe oublié ?" />
+        </VBox>
+
+        <!-- ===== PANNEAU DROIT : Panel de bienvenue ===== -->
+        <VBox alignment="CENTER" spacing="20" styleClass="login-panel-right" HBox.hgrow="ALWAYS">
+            <padding><Insets bottom="48" left="48" right="48" top="48" /></padding>
+
+            <Label styleClass="login-right-title" text="Bienvenue !" />
+            <Label maxWidth="240" styleClass="login-right-subtitle" text="Gérez votre bibliothèque scolaire depuis un seul espace centralisé." textAlignment="CENTER" wrapText="true" />
+        </VBox>
+
+    </HBox>
+</StackPane>
