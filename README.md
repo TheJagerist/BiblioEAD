@@ -115,3 +115,157 @@ Les fichiers `login.fxml` et `menu_principal.fxml` sont dans
 - [ ] Gestion des Emprunts et Retours (EmpruntController) — règles RG-01 à RG-05
 - [ ] Tableau de Bord (DashboardController)
 - [ ] Historique des emprunts et retours par adhérent
+
+# BiblioEAD — Gestion de Bibliothèque Scolaire
+**Projet académique · GL3 Groupe 4 · EAD**  
+Stack : Java 17 · JavaFX 21 · PostgreSQL · Maven
+
+---
+
+## Prérequis
+
+Avant de lancer le projet, assurez-vous d'avoir installé :
+
+| Outil | Version minimale | Vérification |
+|-------|-----------------|--------------|
+| Java (JDK) | 17 | `java -version` |
+| Maven | 3.8+ | `mvn -version` |
+| PostgreSQL | 14+ | `psql --version` |
+
+---
+
+## Étape 1 — Cloner le projet
+
+```bash
+git clone https://github.com/TheJagerist/BiblioEAD.git
+cd BiblioEAD
+```
+
+---
+
+## Étape 2 — Créer la base de données PostgreSQL
+
+Ouvrez un terminal et connectez-vous à PostgreSQL :
+
+```bash
+psql -U postgres
+```
+
+Puis exécutez :
+
+```sql
+CREATE DATABASE bibliotheque_ead;
+\c bibliotheque_ead
+```
+
+Ensuite, exécutez le schéma SQL fourni dans le projet :
+
+```bash
+psql -U postgres -d bibliotheque_ead -f database/schema_postgresql.sql
+```
+
+---
+
+## Étape 3 — Adapter le mot de passe PostgreSQL
+
+Ouvrez le fichier :
+```
+src/main/java/com/ead/bibliotheque/util/DatabaseConnection.java
+```
+
+Modifiez la ligne suivante avec **votre** mot de passe PostgreSQL local :
+
+```java
+private static final String PASSWORD = "VOTRE_MOT_DE_PASSE_ICI";
+```
+
+> ⚠️ Ne commitez pas votre mot de passe personnel sur GitHub.
+
+Si vous ne connaissez pas votre mot de passe PostgreSQL, vous pouvez le réinitialiser via `psql` :
+```sql
+ALTER USER postgres PASSWORD 'postgres';
+```
+Et mettre `"postgres"` dans `DatabaseConnection.java`.
+
+---
+
+## Étape 4 — Créer le compte administrateur
+
+Cette étape est à effectuer **une seule fois**.
+
+Dans IntelliJ IDEA : ouvrez le fichier
+```
+src/main/java/com/ead/bibliotheque/util/InitAdministrateur.java
+```
+Faites un **clic droit → Run 'InitAdministrateur.main()'**.
+
+Ou via Maven :
+```bash
+mvn exec:java -Dexec.mainClass="com.ead.bibliotheque.util.InitAdministrateur"
+```
+
+Cela crée le compte : **login** `admin` / **mot de passe** `admin123`
+
+---
+
+## Étape 5 — Lancer l'application
+
+```bash
+mvn clean javafx:run
+```
+
+L'application démarre sur l'écran de connexion.  
+Connectez-vous avec : `admin` / `admin123`
+
+---
+
+## Structure du projet
+
+```
+BiblioEAD/
+├── database/
+│   └── schema_postgresql.sql       ← Schéma BDD à exécuter (étape 2)
+├── src/main/java/com/ead/bibliotheque/
+│   ├── MainApp.java                ← Point d'entrée
+│   ├── controllers/                ← Contrôleurs JavaFX (MVC)
+│   ├── dao/                        ← Accès base de données
+│   ├── models/                     ← Modèles de données
+│   └── util/                       ← DatabaseConnection, SessionManager
+├── src/main/resources/
+│   └── com/ead/bibliotheque/
+│       ├── css/styles.css          ← Feuille de style
+│       ├── fxml/                   ← Vues FXML
+│       └── images/                 ← Logo EAD
+└── pom.xml                         ← Configuration Maven
+```
+
+---
+
+## Modules de l'application
+
+| Module | Description |
+|--------|-------------|
+| **Dashboard** | KPI globaux + timeline d'activité récente |
+| **Adhérents** | CRUD complet, génération automatique du n° de carte |
+| **Catalogue** | CRUD livres, couvertures images, section nouveautés |
+| **Gestion des Activités** | Emprunts en cours · Retards · Historique (RG-01/02/03) |
+
+---
+
+## Règles métier implémentées
+
+- **RG-01** : Vérification de la disponibilité du livre avant emprunt
+- **RG-02** : Date de retour calculée automatiquement à J+14
+- **RG-03** : Quota maximum de 3 emprunts simultanés par adhérent
+- **RG-06** : Authentification sécurisée (BCrypt)
+
+---
+
+## En cas de problème
+
+**Erreur de connexion BDD** → Vérifiez le mot de passe dans `DatabaseConnection.java` et que PostgreSQL est bien démarré.
+
+**`InitAdministrateur` échoue** → Vérifiez que la base et le schéma ont bien été créés (étape 2).
+
+**Erreur Maven au lancement** → Assurez-vous d'être sur Java 17 : `java -version`
+
