@@ -26,6 +26,30 @@ public class LivreDAO {
     }
 
     public boolean ajouter(Livre l) {
+        // Vérifier si un livre avec le même ISBN existe déjà
+        String isbn = l.getIsbn();
+        if (isbn != null && !isbn.trim().isEmpty()) {
+            String sqlCheck = "SELECT id_livre, nombre_exemplaires, exemplaires_disponibles " +
+                    "FROM livres WHERE isbn = ?";
+            try (Connection c = DatabaseConnection.getConnection();
+                 PreparedStatement s = c.prepareStatement(sqlCheck)) {
+                s.setString(1, isbn);
+                try (ResultSet rs = s.executeQuery()) {
+                    if (rs.next()) {
+                        // ISBN déjà existant -> on incrémente au lieu de dupliquer
+                        int idExistant = rs.getInt("id_livre");
+                        int nbTotal = rs.getInt("nombre_exemplaires") + l.getNombreExemplaires();
+                        int nbDispo = rs.getInt("exemplaires_disponibles") + l.getExemplairesDisponibles();
+                        return incrementerExemplaires(idExistant, nbTotal, nbDispo, l);
+                    }
+                }
+            } catch (SQLException e) {
+                System.err.println("Erreur vérification ISBN : " + e.getMessage());
+                return false;
+            }
+        }
+
+        // Aucun doublon trouvé -> insertion normale
         String sql = "INSERT INTO livres (titre, auteur, genre, annee, isbn, " +
                 "nombre_exemplaires, exemplaires_disponibles, image_couverture) VALUES (?,?,?,?,?,?,?,?)";
         try (Connection c = DatabaseConnection.getConnection();
@@ -49,6 +73,22 @@ public class LivreDAO {
             System.err.println("Erreur ajout livre : " + e.getMessage());
         }
         return false;
+    }
+
+    private boolean incrementerExemplaires(int idLivre, int nbTotal, int nbDispo, Livre l) {
+        String sql = "UPDATE livres SET nombre_exemplaires = ?, exemplaires_disponibles = ? WHERE id_livre = ?";
+        try (Connection c = DatabaseConnection.getConnection();
+             PreparedStatement s = c.prepareStatement(sql)) {
+            s.setInt(1, nbTotal);
+            s.setInt(2, nbDispo);
+            s.setInt(3, idLivre);
+            boolean ok = s.executeUpdate() > 0;
+            if (ok) l.setIdLivre(idLivre);
+            return ok;
+        } catch (SQLException e) {
+            System.err.println("Erreur incrémentation exemplaires : " + e.getMessage());
+            return false;
+        }
     }
 
     public boolean modifier(Livre l) {
