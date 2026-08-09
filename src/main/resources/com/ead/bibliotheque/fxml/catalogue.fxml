@@ -11,11 +11,12 @@
       styleClass="fond-application">
 
     <!-- ===== ZONE PRINCIPALE ===== -->
-    <VBox HBox.hgrow="ALWAYS" spacing="0">
+    <VBox HBox.hgrow="ALWAYS" spacing="12">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
         <!-- Toolbar -->
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <padding><Insets top="14" right="16" bottom="10" left="16"/></padding>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+    <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
             <TextField fx:id="fieldRecherche"
                        promptText="Titre, auteur, ISBN, genre..."
                        styleClass="champ-recherche"
@@ -36,12 +37,13 @@
         </HBox>
 
         <!-- Section nouveautés -->
-        <VBox spacing="6">
+        <VBox spacing="6" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 3);">
+    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
             <padding><Insets top="0" right="16" bottom="10" left="16"/></padding>
             <Label text="✦  AJOUTÉS CETTE SEMAINE" styleClass="section-label"/>
             <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
-                        fitToHeight="true" prefHeight="370"
-                        styleClass="fond-application">
+            fitToHeight="true" prefHeight="370"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
                 <HBox fx:id="boxNouveautes" spacing="12">
                     <padding><Insets top="2" bottom="4"/></padding>
                 </HBox>
@@ -49,10 +51,8 @@
         </VBox>
 
         <!-- Tableau -->
-        <Label text="TOUS LES LIVRES" styleClass="section-label">
-            <padding><Insets top="4" right="16" bottom="8" left="16"/></padding>
-        </Label>
-
+        <Label text="TOUS LES LIVRES" styleClass="section-label" style="-fx-background-color: white; -fx-background-radius: 6; -fx-padding: 10 16 10 16;"/>
+        <VBox VBox.vgrow="ALWAYS" spacing="0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 3);">
         <TableView fx:id="tableCatalogue" VBox.vgrow="ALWAYS"
                    onMouseClicked="#onSelectionLigne">
             <columns>
@@ -65,6 +65,7 @@
             </columns>
             <placeholder><Label text="Aucun livre trouvé."/></placeholder>
         </TableView>
+        </VBox>
 
         <!-- Barre d'actions -->
         <HBox spacing="8" styleClass="panneau-lateral-footer">

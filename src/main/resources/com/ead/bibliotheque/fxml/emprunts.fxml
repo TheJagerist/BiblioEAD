@@ -19,25 +19,25 @@
             <tabs>
 
                 <!-- ── EN COURS ── -->
-                <Tab fx:id="tabEnCours" text="En cours" onSelectionChanged="#onTabChange">
+                <Tab fx:id="tabEnCours" text="Emprunts" onSelectionChanged="#onTabChange">
                     <content>
                         <VBox spacing="12" styleClass="fond-application">
                             <padding><Insets top="12" right="0" bottom="8" left="0"/></padding>
                             <HBox fx:id="kpiBarEnCours" spacing="12">
-                            <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                            <VBox styleClass="kpi-card" style="-fx-background-color:#0277bd; -fx-border-color:#0277bd;" spacing="4" HBox.hgrow="ALWAYS">
                                 <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                <Label text="Emprunts en cours" styleClass="kpi-label"/>
-                                <Label fx:id="kpiEnCoursTotal" text="—" styleClass="kpi-val,kpi-val-blue"/>
+                                <Label text="Emprunts en cours" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                <Label fx:id="kpiEnCoursTotal" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                             </VBox>
-                            <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                            <VBox styleClass="kpi-card" style="-fx-background-color:#e65100; -fx-border-color:#e65100;" spacing="4" HBox.hgrow="ALWAYS">
                                 <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                <Label text="À rendre cette semaine" styleClass="kpi-label"/>
-                                <Label fx:id="kpiARendreSemaine" text="—" styleClass="kpi-val,kpi-val-amber"/>
+                                <Label text="À rendre cette semaine" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                <Label fx:id="kpiARendreSemaine" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                             </VBox>
-                            <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                            <VBox styleClass="kpi-card" style="-fx-background-color:#333333; -fx-border-color:#333333;" spacing="4" HBox.hgrow="ALWAYS">
                                 <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                <Label text="Total livres empruntés" styleClass="kpi-label"/>
-                                <Label fx:id="kpiTotalLivres" text="—" styleClass="kpi-val"/>
+                                <Label text="Total livres empruntés" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                <Label fx:id="kpiTotalLivres" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                             </VBox>
                         </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
@@ -81,20 +81,20 @@
                         <VBox spacing="12" styleClass="fond-application">
                             <padding><Insets top="12" right="0" bottom="8" left="0"/></padding>
                             <HBox fx:id="kpiBar" spacing="12">
-                                <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="kpi-card" style="-fx-background-color:#c62828; -fx-border-color:#c62828;" spacing="4" HBox.hgrow="ALWAYS">
                                     <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                    <Label text="Retards actifs" styleClass="kpi-label"/>
-                                    <Label fx:id="kpiRetardsActifs" text="—" styleClass="kpi-val,kpi-val-red"/>
+                                    <Label text="Retards actifs" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                    <Label fx:id="kpiRetardsActifs" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                                 </VBox>
-                                <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="kpi-card" style="-fx-background-color:#e65100; -fx-border-color:#e65100;" spacing="4" HBox.hgrow="ALWAYS">
                                     <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                    <Label text="Jours cumulés" styleClass="kpi-label"/>
-                                    <Label fx:id="kpiJoursCumules" text="—" styleClass="kpi-val,kpi-val-amber"/>
+                                    <Label text="Jours cumulés" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                    <Label fx:id="kpiJoursCumules" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                                 </VBox>
-                                <VBox styleClass="kpi-card" spacing="4" HBox.hgrow="ALWAYS">
+                                <VBox styleClass="kpi-card" style="-fx-background-color:#0277bd; -fx-border-color:#0277bd;" spacing="4" HBox.hgrow="ALWAYS">
                                     <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
-                                    <Label text="Plus ancien retard" styleClass="kpi-label"/>
-                                    <Label fx:id="kpiRetardMax" text="—" styleClass="kpi-val,kpi-val-blue"/>
+                                    <Label text="Plus ancien retard" style="-fx-font-family:'PublicSans'; -fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+                                    <Label fx:id="kpiRetardMax" text="—" style="-fx-font-family:'Fraunces'; -fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                                 </VBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">

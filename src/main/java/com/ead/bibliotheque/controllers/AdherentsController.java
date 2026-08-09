@@ -174,6 +174,12 @@ public class AdherentsController implements Initializable {
     private void onSupprimer() {
         Adherent sel = tableAdherents.getSelectionModel().getSelectedItem();
         if (sel == null) return;
+        if (new com.ead.bibliotheque.dao.EmpruntDAO().compterEmpruntsActifs(sel.getIdAdherent()) > 0) {
+            new Alert(Alert.AlertType.WARNING,
+                    "Impossible de supprimer " + sel.getNom() + " : il a des emprunts en cours ou en retard.")
+                    .showAndWait();
+            return;
+        }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Supprimer " + sel.getNom() + " " + sel.getPrenom() + " ?",

@@ -37,6 +37,8 @@ public class MenuPrincipalController {
         }
         // Charge le dashboard par défaut
         chargerVue("dashboard.fxml", "Tableau de bord");
+        btnDashboard.getStyleClass().remove("lien-navigation");
+        btnDashboard.getStyleClass().add("lien-navigation-actif");
     }
 
     private void chargerVue(String fxmlFile, String titre) {
@@ -51,13 +53,24 @@ public class MenuPrincipalController {
     }
     
     @FXML
-    private void handleNav(ActionEvent e) {
-        Button src = (Button) e.getSource();
-        if (src == btnDashboard)  chargerVue("dashboard.fxml",  "Tableau de bord");
-        if (src == btnAdherents)  chargerVue("adherents.fxml",  "Gestion des adhérents");
-        if (src == btnCatalogue)  chargerVue("catalogue.fxml",  "Catalogue de livres");
-        if (src == btnEmprunts)   chargerVue("emprunts.fxml",   "Gestion des Activités");
+private void handleNav(ActionEvent e) {
+    // Retirer la classe active de tous les boutons
+    for (Button btn : new Button[]{btnDashboard, btnAdherents, btnCatalogue, btnEmprunts}) {
+        btn.getStyleClass().remove("lien-navigation-actif");
+        if (!btn.getStyleClass().contains("lien-navigation"))
+            btn.getStyleClass().add("lien-navigation");
     }
+
+    // Appliquer la classe active au bouton cliqué
+    Button src = (Button) e.getSource();
+    src.getStyleClass().remove("lien-navigation");
+    src.getStyleClass().add("lien-navigation-actif");
+
+    if (src == btnDashboard) chargerVue("dashboard.fxml",  "Tableau de bord");
+    if (src == btnAdherents) chargerVue("adherents.fxml",  "Gestion des adhérents");
+    if (src == btnCatalogue) chargerVue("catalogue.fxml",  "Catalogue de livres");
+    if (src == btnEmprunts)  chargerVue("emprunts.fxml",   "Gestion des Activités");
+}
 
     @FXML
     private void handleDeconnexion(ActionEvent e) {

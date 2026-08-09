@@ -104,45 +104,46 @@ public class CatalogueController implements Initializable {
     }
 
     private VBox creerCarteNouveaute(Livre l) {
+        // Placeholder coloré
         String[] couleurs = {"#1a3a5c","#3a1a2c","#1a3a1a","#3a2a0d","#2a1a3a"};
         String couleur = couleurs[Math.abs(l.getTitre().hashCode()) % couleurs.length];
 
         StackPane cover = new StackPane();
-        cover.setPrefSize(100, 138);
+        cover.setPrefSize(90, 124);
         cover.setStyle("-fx-background-color:" + couleur + "; -fx-background-radius:6;");
 
-        // Image si disponible
+        // Image de couverture si disponible
         String imgPath = l.getImageCouverture();
         if (imgPath != null && !imgPath.isBlank()) {
             try {
                 String url = imgPath.startsWith("http") ? imgPath : new java.io.File(imgPath).toURI().toString();
-                ImageView iv = new ImageView(new Image(url, 100, 138, false, true, true));
-                iv.setFitWidth(100); iv.setFitHeight(138);
+                ImageView iv = new ImageView(new Image(url, 90, 124, false, true, true));
+                iv.setFitWidth(90); iv.setFitHeight(124);
                 iv.setPreserveRatio(false);
-                javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(100, 138);
-                clip.setArcWidth(12); clip.setArcHeight(12);
-                iv.setClip(clip);
+                
                 cover.getChildren().add(iv);
             } catch (Exception ignored) {}
         }
 
         // Badge "Nouveau"
-        Label badgeNew = new Label("Nouveau");
-        badgeNew.setStyle("-fx-background-color:#58cc02;-fx-text-fill:#16213e;-fx-font-size:8px;" +
-                "-fx-padding:2 5 2 5;-fx-background-radius:3;");
-        StackPane.setAlignment(badgeNew, javafx.geometry.Pos.TOP_RIGHT);
-        cover.getChildren().add(badgeNew);
+        if (l.isNouveaute()) {
+            Label badge = new Label("Nouveau");
+            badge.setStyle("-fx-background-color:#58cc02;-fx-text-fill:#16213e;-fx-font-size:8px;" +
+                    "-fx-padding:2 5 2 5;-fx-background-radius:3;");
+            StackPane.setAlignment(badge, javafx.geometry.Pos.TOP_RIGHT);
+            cover.getChildren().add(badge);
+        }
 
         // Infos sous la couverture
         Label titre = new Label(l.getTitre());
-        titre.setPrefWidth(100); titre.setWrapText(true);
+        titre.setPrefWidth(90); titre.setWrapText(true);
         titre.setStyle("-fx-font-size:10px; -fx-font-weight:bold; -fx-text-fill:#1a1a1a;");
 
         Label auteur = new Label(l.getAuteur());
         auteur.setStyle("-fx-font-size:9px; -fx-text-fill:#888888;");
 
         VBox carte = new VBox(5, cover, titre, auteur);
-        carte.setPrefWidth(100);
+        carte.setPrefWidth(90);
         return carte;
     }
 
@@ -214,13 +215,6 @@ public class CatalogueController implements Initializable {
     private void onSupprimer() {
         Livre sel = tableCatalogue.getSelectionModel().getSelectedItem();
         if (sel == null) return;
-
-        if (new com.ead.bibliotheque.dao.EmpruntDAO().livreADesEmprunts(sel.getIdLivre())) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Impossible de supprimer « " + sel.getTitre() + " » : des emprunts y sont associés.")
-                    .showAndWait();
-            return;
-        }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Supprimer « " + sel.getTitre() + " » et tous ses exemplaires ?",
                 ButtonType.YES, ButtonType.NO);
@@ -271,9 +265,10 @@ public class CatalogueController implements Initializable {
             livreEnCours.setTitre(fieldTitre.getText().trim());
             livreEnCours.setAuteur(fieldAuteur.getText().trim());
             livreEnCours.setGenre(comboGenreForm.getValue());
-            livreEnCours.setAnnee(annee);
+            livreEnCours.setAnnee (annee) ;
             livreEnCours.setIsbn(fieldIsbn.getText().trim());
             livreEnCours.setImageCouverture(fieldImageCouverture.getText().trim());
+            livreEnCours.setNombreExemplaires(spinnerExemplaires.getValue());
             dao.modifier(livreEnCours);
         }
 

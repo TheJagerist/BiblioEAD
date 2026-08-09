@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'Fraunces';
+    src: url('../fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf');
+}
+@font-face {
+    font-family: 'PublicSans';
+    src: url('../fonts/PublicSans-VariableFont_wght.ttf');
+}
+
+/* ── Reset général ── */
+.root {
+    -fx-background-color: #f4f4f5;
+    -fx-font-family: "PublicSans";
+}
+
 .fond-connexion {
     -fx-background-color: #f4f4f5;
 }
@@ -31,6 +46,7 @@
     -fx-border-width: 1.2;
     -fx-padding: 8 24 8 24;
     -fx-font-weight: bold;
+    -fx-font-family: "PublicSans";
 }
 
 .bouton-principal:hover {
@@ -39,109 +55,281 @@
 
 .fond-application {
     -fx-background-color: #f4f4f5;
+    -fx-background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZjRmNGY1Ii8+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMSIgZmlsbD0iI2QwZDBkMCIvPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIxIiBmaWxsPSIjZDBkMGQwIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIwIiByPSIxIiBmaWxsPSIjZDBkMGQwIi8+PGNpcmNsZSBjeD0iMCIgY3k9IjIwIiByPSIxIiBmaWxsPSIjZDBkMGQwIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0iI2QwZDBkMCIvPjwvc3ZnPg==");
+    -fx-background-repeat: repeat;
+    -fx-rouge-ead: #CC0000;
+    -fx-rouge-ead-clair: #FCEBEB;
+    -fx-rouge-ead-texte: #A32D2D;
+    -fx-bleu-ead: #5BB8D4;
+    -fx-bleu-ead-clair: #E6F3F8;
+    -fx-bleu-ead-texte: #2E7A98;
+    -fx-gris-carte: #fafafa;
+    -fx-background-image: url("../images/pattern_bg.png");
+    -fx-background-repeat: repeat;
+    -fx-background-size: cover;
+    -fx-opacity: 1;
+    
+}
+.fond-application > .scroll-pane > .viewport > .scroll-content {
+    -fx-background-color: rgba(244,244,245,0.7);
 }
 
+/* ══ SIDEBAR ══════════════════════════════════════════════════ */
 .barre-laterale {
     -fx-background-color: white;
-    -fx-border-color: transparent #cccccc transparent transparent;
+    -fx-border-color: transparent #e0e0e0 transparent transparent;
     -fx-border-width: 1;
+    -fx-background-image: url("../images/pattern_sidebar.svg");
+    -fx-background-repeat: repeat;
 }
 
+/* Force le slot left du BorderPane à ne pas hériter du fond sombre */
+.barre-laterale > .scroll-pane,
+.barre-laterale > .scroll-pane > .viewport {
+    -fx-background-color: white;
+}
+
+
 .titre-module {
-    -fx-font-size: 16px;
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-padding: 10;
-    -fx-border-color: #333333;
-    -fx-border-width: 1.2;
+    -fx-text-fill: #1a1a1a;
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #e0e0e0 transparent;
+    -fx-border-width: 1;
     -fx-alignment: center;
 }
 
 .lien-navigation {
+    -fx-font-family: "PublicSans";
     -fx-font-size: 13px;
     -fx-font-weight: bold;
     -fx-text-fill: #333333;
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.lien-navigation:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-cursor: hand;
+}
+
+.lien-navigation-actif {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #CC0000;
+    -fx-background-color: #fafafa;
+    -fx-border-color: #CC0000 transparent transparent transparent;
+    -fx-border-width: 0 0 0 3;
 }
 
 .sous-lien {
     -fx-padding: 0 0 0 20;
 }
 
+/* ══ TOPBAR ═══════════════════════════════════════════════════ */
 .barre-actions {
-    -fx-background-color: #f4f4f5;
-    -fx-border-color: transparent transparent transparent #cccccc;
-    -fx-border-width: 1;
+    -fx-background-color: #5BB8D4;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+.barre-actions .lien-navigation {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
 }
 
+.barre-actions .lien-navigation:hover {
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.barre-actions Label {
+    -fx-text-fill: #eeeeee;
+}
+
+/* ══ BOUTONS ══════════════════════════════════════════════════ */
 .bouton-action {
     -fx-background-color: white;
-    -fx-border-color: #333333;
-    -fx-border-width: 1.2;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
     -fx-font-weight: bold;
-    -fx-padding: 14 10 14 10;
+    -fx-font-family: "PublicSans";
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
 }
 
 .bouton-action:hover {
-    -fx-background-color: #eeeeee;
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #999999;
 }
 
-.login-logo {
-    -fx-background-radius: 16;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+.bouton-action-danger {
+    -fx-background-color: white;
+    -fx-border-color: #c62828;
+    -fx-border-width: 1;
+    -fx-text-fill: #c62828;
+    -fx-padding: 8 14 8 14;
+    -fx-font-weight: bold;
+    -fx-font-family: "PublicSans";
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
 }
+
+.bouton-action-danger:hover {
+    -fx-background-color: #fdecea;
+}
+
+/* ══ LOGIN ════════════════════════════════════════════════════ */
+.login-root {
+    -fx-background-color: #F5F0E8;
+}
+
+.login-decor-circle {
+    -fx-fill: transparent;
+    -fx-stroke: #D4C9B0;
+    -fx-stroke-width: 1.5;
+}
+
 .login-logo-wrapper {
     -fx-background-color: white;
-    -fx-background-radius: 16;
-    -fx-border-radius: 16;
-    -fx-border-color: #E2E8F0;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #E2D9CC;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
     -fx-padding: 10;
+    -fx-alignment: center;
 }
 
-/* ── Dashboard KPI cards ── */
+.login-title {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a2e;
+}
+
+.login-subtitle {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 13px;
+    -fx-text-fill: #888888;
+}
+
+.login-field-label {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #777777;
+}
+
+.login-field-inner {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-font-size: 12px;
+    -fx-text-fill: #1a1a1a;
+    -fx-prompt-text-fill: #bbbbbb;
+}
+
+.login-field-inner:focused {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.login-error {
+    -fx-text-fill: #CC0000;
+    -fx-font-size: 12px;
+    -fx-alignment: center;
+}
+
+.btn-login {
+    -fx-background-color: #CC0000;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 30;
+    -fx-cursor: hand;
+    -fx-font-family: "PublicSans";
+}
+
+.btn-login:hover {
+    -fx-background-color: #aa0000;
+}
+
+.login-link {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-text-fill: #888888;
+    -fx-underline: false;
+}
+
+/* ══ KPI CARDS ════════════════════════════════════════════════ */
 .kpi-card {
     -fx-background-color: white;
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
     -fx-border-radius: 10;
     -fx-border-color: #e8e8e8;
     -fx-border-width: 1;
 }
+
 .kpi-label {
+    -fx-font-family: "PublicSans";
     -fx-font-size: 11px;
     -fx-text-fill: #888888;
 }
+
 .kpi-val {
+    -fx-font-family: "Fraunces";
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
+
 .kpi-val-green  { -fx-text-fill: #2e7d32; }
 .kpi-val-blue   { -fx-text-fill: #0277bd; }
 .kpi-val-amber  { -fx-text-fill: #e65100; }
 .kpi-val-red    { -fx-text-fill: #c62828; }
+.kpi-card-blue {
+    -fx-background-color: #0277bd;
+    -fx-border-color: #0277bd;
+}
+.kpi-card-amber {
+    -fx-background-color: #e65100;
+    -fx-border-color: #e65100;
+}
+.kpi-card-red {
+    -fx-background-color: #c62828;
+    -fx-border-color: #c62828;
+}
+.kpi-card-neutral {
+    -fx-background-color: #333333;
+    -fx-border-color: #333333;
+}
+.kpi-label-white {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 11px;
+}
+.kpi-val-white {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
 
-/* ── Section label ── */
+/* ══ SECTION LABEL ════════════════════════════════════════════ */
 .section-label {
+    -fx-font-family: "PublicSans";
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-text-fill: #555555;
-    -fx-letter-spacing: 1.2px;
 }
 
-/* ── Table card (dashboard) ── */
-.table-card {
-    -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
-    -fx-border-radius: 10;
-    -fx-border-color: #e8e8e8;
-    -fx-border-width: 1;
-}
-.table-card-header {
-    -fx-border-color: transparent transparent #eeeeee transparent;
-    -fx-border-width: 1;
-}
-/* ── Champ de recherche / saisie générique ── */
+/* ══ FORMULAIRES ══════════════════════════════════════════════ */
 .champ-recherche {
     -fx-background-color: white;
     -fx-border-color: #cccccc;
@@ -150,33 +338,20 @@
     -fx-background-radius: 4;
     -fx-padding: 6 10 6 10;
     -fx-font-size: 12px;
+    -fx-font-family: "PublicSans";
 }
+
 .champ-recherche:focused {
     -fx-border-color: #333333;
 }
 
-/* ── Bouton danger (supprimer) ── */
-.bouton-action-danger {
-    -fx-background-color: white;
-    -fx-border-color: #c62828;
-    -fx-border-width: 1.2;
-    -fx-text-fill: #c62828;
-    -fx-padding: 8 14 8 14;
-    -fx-font-weight: bold;
-}
-.bouton-action-danger:hover {
-    -fx-background-color: #fdecea;
-}
-
-/* ── Label de champ formulaire ── */
 .form-field-label {
+    -fx-font-family: "PublicSans";
     -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-text-fill: #777777;
-    -fx-letter-spacing: 0.6px;
 }
 
-/* ── Champ auto (n° carte verrouillé) ── */
 .champ-auto {
     -fx-background-color: #f0f0f0;
     -fx-border-color: #cccccc;
@@ -185,28 +360,49 @@
     -fx-background-radius: 4;
 }
 
-/* ── Panneau latéral ── */
+/* ══ PANNEAU LATÉRAL ══════════════════════════════════════════ */
 .panneau-lateral {
     -fx-background-color: white;
-    -fx-border-color: transparent transparent transparent #cccccc;
+    -fx-border-color: transparent transparent transparent #e0e0e0;
     -fx-border-width: 1;
 }
+
 .panneau-lateral-header {
+    -fx-background-color: white;
     -fx-border-color: transparent transparent #eeeeee transparent;
     -fx-border-width: 1;
 }
+
 .panneau-lateral-footer {
+    -fx-background-color: white;
     -fx-border-color: #eeeeee transparent transparent transparent;
     -fx-border-width: 1;
 }
-/* ── Spinner ── */
+
+/* ══ TABLE CARD ═══════════════════════════════════════════════ */
+.table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+    -fx-border-radius: 10;
+    -fx-border-color: #e8e8e8;
+    -fx-border-width: 1;
+}
+
+.table-card-header {
+    -fx-border-color: transparent transparent #eeeeee transparent;
+    -fx-border-width: 1;
+}
+
+/* ══ SPINNER ══════════════════════════════════════════════════ */
 .spinner .text-field {
     -fx-background-color: white;
     -fx-border-color: #cccccc;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
 }
-/* Bloc de vérification RG dans le panneau latéral */
+
+/* ══ VERIF BLOC ═══════════════════════════════════════════════ */
 .verif-bloc {
     -fx-background-color: #f0f4f8;
     -fx-background-radius: 7;
@@ -215,62 +411,93 @@
     -fx-border-width: 1;
 }
 
-/* TabPane emprunts */
+/* ══ TAB PANE ═════════════════════════════════════════════════ */
 .emprunts-tabpane > .tab-header-area > .headers-region > .tab:selected {
     -fx-background-color: white;
 }
-/* ============================================================
-   IDENTITÉ ÉDITORIALE — Dashboard
-   ============================================================ */
 
-.fond-application {
-    -fx-rouge-ead: #CC0000;
-    -fx-rouge-ead-clair: #FCEBEB;
-    -fx-rouge-ead-texte: #A32D2D;
-    -fx-bleu-ead: #5BB8D4;
-    -fx-bleu-ead-clair: #E6F3F8;
-    -fx-bleu-ead-texte: #2E7A98;
-    -fx-gris-carte: #fafafa;
-}
+/* ══ DASHBOARD ÉDITORIAL ══════════════════════════════════════ */
 
 .page-titre {
-    -fx-font-family: "Georgia";
-    -fx-font-size: 23px;
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(gaussian, white, 6, 0.8, 0, 0);
+}
+
+.page-sous-titre {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-text-fill: #555555;
+    -fx-effect: dropshadow(gaussian, white, 4, 0.8, 0, 0);
+}
+
+/* Cartes dos-de-livre */
+.carte-dos-livre {
+    -fx-background-color: white;
+    -fx-background-radius: 0 12 12 0;
+    -fx-border-width: 0 0 0 3;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 3);
+}
+
+.carte-dos-livre-bleu  { -fx-border-color: #5BB8D4; }
+.carte-dos-livre-rouge { -fx-border-color: #CC0000; }
+
+.carte-label {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-text-fill: #8a8a8a;
+}
+
+.carte-icone-bleu  { -fx-font-size: 14px; -fx-text-fill: #2E7A98; }
+.carte-icone-rouge { -fx-font-size: 14px; -fx-text-fill: #CC0000; }
+
+.carte-val {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
     -fx-text-fill: #1a1a1a;
 }
-.page-sous-titre {
-    -fx-font-size: 12px;
-    -fx-text-fill: #9a9a9a;
+
+.carte-val-rouge {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #CC0000;
 }
 
-/* Cartes "dos de livre" */
-.carte-dos-livre {
-    -fx-background-color: -fx-gris-carte;
-    -fx-background-radius: 0 12 12 0;
-    -fx-border-width: 0 0 0 3;
+.carte-val-moyen {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
 }
-.carte-dos-livre-bleu  { -fx-border-color: -fx-bleu-ead; }
-.carte-dos-livre-rouge { -fx-border-color: -fx-rouge-ead; }
 
-.carte-label { -fx-font-size: 12px; -fx-text-fill: #8a8a8a; }
-.carte-icone-bleu  { -fx-font-size: 14px; -fx-text-fill: -fx-bleu-ead-texte; }
-.carte-icone-rouge { -fx-font-size: 14px; -fx-text-fill: -fx-rouge-ead; }
-.carte-val { -fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
-.carte-val-rouge { -fx-text-fill: -fx-rouge-ead; }
-.carte-val-moyen { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
-.carte-val-suffixe { -fx-font-size: 13px; -fx-text-fill: #aaaaaa; }
-.carte-pied { -fx-font-size: 10px; -fx-text-fill: #aaaaaa; }
+.carte-val-suffixe {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 13px;
+    -fx-text-fill: #aaaaaa;
+}
 
+.carte-pied {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 10px;
+    -fx-text-fill: #aaaaaa;
+}
+
+/* Spark bars */
 .spark-barre {
-    -fx-background-color: -fx-bleu-ead;
+    -fx-background-color: #5BB8D4;
     -fx-background-radius: 2 2 0 0;
     -fx-min-width: 6;
+    -fx-opacity: 0.75;
 }
 
 .badge-danger {
-    -fx-background-color: -fx-rouge-ead-clair;
-    -fx-text-fill: -fx-rouge-ead-texte;
+    -fx-background-color: #FCEBEB;
+    -fx-text-fill: #A32D2D;
+    -fx-font-family: "PublicSans";
     -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-padding: 2 8 2 8;
@@ -278,7 +505,11 @@
 }
 
 /* Cartes plates */
-.carte-plate { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
+.carte-plate {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 3);
+}
 
 .avatar-mini {
     -fx-min-width: 22; -fx-pref-width: 22; -fx-max-width: 22;
@@ -292,42 +523,91 @@
     -fx-alignment: center;
 }
 
-.barre-progression-fond { -fx-background-color: #eeeeee; -fx-background-radius: 2; }
-.barre-progression-remplissage { -fx-background-color: -fx-bleu-ead; -fx-background-radius: 2; }
+.barre-progression-fond {
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 2;
+}
 
-.stat-label { -fx-font-size: 12px; -fx-text-fill: #9a9a9a; }
-.stat-val { -fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.barre-progression-remplissage {
+    -fx-background-color: #5BB8D4;
+    -fx-background-radius: 2;
+}
+
+.stat-label {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-text-fill: #9a9a9a;
+}
+
+.stat-val {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
 
 /* Timeline */
-.carte-timeline { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
-.lien-voir-tout {
-    -fx-font-size: 11px; -fx-font-weight: bold;
-    -fx-text-fill: -fx-bleu-ead-texte; -fx-cursor: hand;
+.carte-timeline {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 3);
 }
-.puce-bleu  { -fx-fill: -fx-bleu-ead;  -fx-stroke: transparent; }
-.puce-rouge { -fx-fill: -fx-rouge-ead; -fx-stroke: transparent; }
-.puce-gris  { -fx-fill: #cccccc;       -fx-stroke: transparent; }
+
+.lien-voir-tout {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7A98;
+    -fx-cursor: hand;
+}
+
+.puce-bleu  { -fx-fill: #5BB8D4; -fx-stroke: transparent; }
+.puce-rouge { -fx-fill: #CC0000; -fx-stroke: transparent; }
+.puce-gris  { -fx-fill: #cccccc; -fx-stroke: transparent; }
 .ligne-timeline { -fx-background-color: #e5e5e5; -fx-min-width: 1; -fx-max-width: 1; }
-.timeline-nom { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
-.timeline-meta { -fx-font-size: 11px; -fx-text-fill: #9a9a9a; }
-.timeline-meta-bleu  { -fx-font-size: 11px; -fx-text-fill: -fx-bleu-ead-texte; }
-.timeline-meta-rouge { -fx-font-size: 11px; -fx-text-fill: -fx-rouge-ead; }
+.timeline-nom  { -fx-font-family: "PublicSans"; -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.timeline-meta { -fx-font-family: "PublicSans"; -fx-font-size: 11px; -fx-text-fill: #9a9a9a; }
+.timeline-meta-bleu  { -fx-font-family: "PublicSans"; -fx-font-size: 11px; -fx-text-fill: #2E7A98; }
+.timeline-meta-rouge { -fx-font-family: "PublicSans"; -fx-font-size: 11px; -fx-text-fill: #CC0000; }
 
 /* Genres */
-.carte-genres { -fx-background-color: -fx-gris-carte; -fx-background-radius: 12; }
-.genre-nom { -fx-font-size: 11px; -fx-text-fill: #8a8a8a; }
-.genre-pourcentage { -fx-font-size: 11px; -fx-text-fill: #aaaaaa; }
-.barre-genre-fond { -fx-background-color: #eeeeee; -fx-background-radius: 0 4 4 0; -fx-border-width: 0 0 0 3; }
-.barre-genre-fond-rouge { -fx-border-color: -fx-rouge-ead; }
-.barre-genre-fond-bleu  { -fx-border-color: -fx-bleu-ead; }
-.barre-genre-fond-gris  { -fx-border-color: #cccccc; }
-.barre-genre-remplissage-rouge { -fx-background-color: -fx-rouge-ead-clair; -fx-background-radius: 0 4 4 0; }
-.barre-genre-remplissage-bleu  { -fx-background-color: -fx-bleu-ead-clair;  -fx-background-radius: 0 4 4 0; }
-.barre-genre-remplissage-gris  { -fx-background-color: #f0f0f0;             -fx-background-radius: 0 4 4 0; }
+.carte-genres {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 3);
+}
 
-/* Sidebar : item actif en rouge au lieu du vert */
-.lien-navigation-actif {
+.genre-nom        { -fx-font-family: "PublicSans"; -fx-font-size: 11px; -fx-text-fill: #8a8a8a; }
+.genre-pourcentage { -fx-font-family: "PublicSans"; -fx-font-size: 11px; -fx-text-fill: #aaaaaa; }
+
+.barre-genre-fond {
+    -fx-background-color: #eeeeee;
+    -fx-background-radius: 0 4 4 0;
     -fx-border-width: 0 0 0 3;
-    -fx-border-color: -fx-rouge-ead;
-    -fx-background-color: -fx-gris-carte;
+}
+
+.barre-genre-fond-rouge { -fx-border-color: #CC0000; }
+.barre-genre-fond-bleu  { -fx-border-color: #5BB8D4; }
+.barre-genre-fond-gris  { -fx-border-color: #cccccc; }
+
+.barre-genre-remplissage-rouge { -fx-background-color: #FCEBEB; -fx-background-radius: 0 4 4 0; }
+.barre-genre-remplissage-bleu  { -fx-background-color: #E6F3F8; -fx-background-radius: 0 4 4 0; }
+.barre-genre-remplissage-gris  { -fx-background-color: #f0f0f0; -fx-background-radius: 0 4 4 0; }
+.entete-dashboard {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 2);
+}
+
+.page-titre {
+    -fx-font-family: "Fraunces";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
+
+.page-sous-titre {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 12px;
+    -fx-text-fill: #9a9a9a;
 }

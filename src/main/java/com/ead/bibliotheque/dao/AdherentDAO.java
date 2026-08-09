@@ -151,17 +151,26 @@ public class AdherentDAO {
 
     /** Supprime un adhérent par son identifiant. */
     public boolean supprimer(int idAdherent) {
+        String sqlEmprunts = "DELETE FROM emprunts WHERE id_adherent = ? AND statut = 'RENDU'";
         String sql = "DELETE FROM adherents WHERE id_adherent = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idAdherent);
-            return stmt.executeUpdate() > 0;
+        try (Connection c = DatabaseConnection.getConnection()) {
+            c.setAutoCommit(false);
+            try (PreparedStatement s1 = c.prepareStatement(sqlEmprunts);
+                 PreparedStatement s2 = c.prepareStatement(sql)) {
+                s1.setInt(1, idAdherent);
+                s1.executeUpdate();
+                s2.setInt(1, idAdherent);
+                int rows = s2.executeUpdate();
+                c.commit();
+                return rows > 0;
+            } catch (SQLException e) {
+                c.rollback();
+                System.err.println("Erreur suppression adhérent : " + e.getMessage());
+            }
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la suppression de l'adhérent : " + e.getMessage());
-            return false;
+            System.err.println("Erreur suppression adhérent : " + e.getMessage());
         }
+        return false;
     }
 
     /**

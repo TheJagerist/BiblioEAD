@@ -6,17 +6,20 @@
 <?import javafx.scene.shape.Circle?>
 
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+            style="-fx-background-color: transparent; -fx-background: transparent;"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ead.bibliotheque.controllers.DashboardController"
             styleClass="fond-application"
             stylesheets="@../css/styles.css">
+            
 
-    <VBox spacing="20" styleClass="fond-application">
+    <VBox spacing="20" style="-fx-background-color: transparent;">
         <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
 
         <!-- EN-TÊTE -->
-        <VBox spacing="2">
+        <VBox spacing="2" styleClass="entete-dashboard">
+            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
             <Label text="Tableau de bord" styleClass="page-titre"/>
             <Label text="Vue d'ensemble — mise à jour aujourd'hui" styleClass="page-sous-titre"/>
         </VBox>

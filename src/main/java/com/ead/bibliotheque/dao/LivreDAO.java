@@ -52,7 +52,9 @@ public class LivreDAO {
     }
 
     public boolean modifier(Livre l) {
-        String sql = "UPDATE livres SET titre=?, auteur=?, genre=?, annee=?, isbn=?, image_couverture=? WHERE id_livre=?";
+        String sql = "UPDATE livres SET titre=?, auteur=?, genre=?, annee=?, isbn=?, image_couverture=?, " +
+             "exemplaires_disponibles = exemplaires_disponibles + (? - nombre_exemplaires), " +
+             "nombre_exemplaires=? WHERE id_livre=?";
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement s = c.prepareStatement(sql)) {
             s.setString(1, l.getTitre());
@@ -61,7 +63,9 @@ public class LivreDAO {
             if (l.getAnnee() != null) s.setInt(4, l.getAnnee()); else s.setNull(4, Types.INTEGER);
             s.setString(5, l.getIsbn());
             s.setString(6, l.getImageCouverture());
-            s.setInt(7, l.getIdLivre());
+            s.setInt(7, l.getNombreExemplaires());  // pour le delta (nouveau - ancien)
+            s.setInt(8, l.getNombreExemplaires());  // pour la valeur finale
+            s.setInt(9, l.getIdLivre());
             return s.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erreur modif livre : " + e.getMessage());
