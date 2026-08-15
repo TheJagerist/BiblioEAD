@@ -12,8 +12,9 @@ public class LivreDAO {
 
     public List<Livre> listerTous() {
         String sql = "SELECT id_livre, titre, auteur, genre, annee, isbn, " +
-                "nombre_exemplaires, exemplaires_disponibles, date_ajout, image_couverture " +
-                "FROM livres ORDER BY titre ASC";
+        "nombre_exemplaires, exemplaires_disponibles, date_ajout, image_couverture, " +
+        "modifie_par, modifie_le " +
+        "FROM livres ORDER BY titre ASC";
         List<Livre> res = new ArrayList<>();
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement s = c.prepareStatement(sql);
@@ -51,7 +52,7 @@ public class LivreDAO {
 
         // Aucun doublon trouvé -> insertion normale
         String sql = "INSERT INTO livres (titre, auteur, genre, annee, isbn, " +
-                "nombre_exemplaires, exemplaires_disponibles, image_couverture) VALUES (?,?,?,?,?,?,?,?)";
+        "nombre_exemplaires, exemplaires_disponibles, image_couverture, cree_par, modifie_par, modifie_le) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement s = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, l.getTitre());
@@ -62,6 +63,11 @@ public class LivreDAO {
             s.setInt(6, l.getNombreExemplaires());
             s.setInt(7, l.getExemplairesDisponibles());
             s.setString(8, l.getImageCouverture());
+            String login = com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte() != null
+            ? com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte().getLogin() : "système";
+            s.setString(9, login);
+            s.setString(10, login);
+            s.setTimestamp(11, java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()));
             int rows = s.executeUpdate();
             if (rows > 0) {
                 try (ResultSet k = s.getGeneratedKeys()) {
@@ -93,8 +99,8 @@ public class LivreDAO {
 
     public boolean modifier(Livre l) {
         String sql = "UPDATE livres SET titre=?, auteur=?, genre=?, annee=?, isbn=?, image_couverture=?, " +
-             "exemplaires_disponibles = exemplaires_disponibles + (? - nombre_exemplaires), " +
-             "nombre_exemplaires=? WHERE id_livre=?";
+        "nombre_exemplaires=?, exemplaires_disponibles = exemplaires_disponibles + (? - nombre_exemplaires), " +
+        "modifie_par=?, modifie_le=? WHERE id_livre=?";
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement s = c.prepareStatement(sql)) {
             s.setString(1, l.getTitre());
@@ -105,7 +111,11 @@ public class LivreDAO {
             s.setString(6, l.getImageCouverture());
             s.setInt(7, l.getNombreExemplaires());  // pour le delta (nouveau - ancien)
             s.setInt(8, l.getNombreExemplaires());  // pour la valeur finale
-            s.setInt(9, l.getIdLivre());
+            String login = com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte() != null
+        ? com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte().getLogin() : "système";
+            s.setString(9, login);
+            s.setTimestamp(10, java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()));
+            s.setInt(11, l.getIdLivre());
             return s.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erreur modif livre : " + e.getMessage());
@@ -138,7 +148,7 @@ public class LivreDAO {
 
     private Livre map(ResultSet rs) throws SQLException {
         Date d = rs.getDate("date_ajout");
-        return new Livre(
+        Livre l = new Livre(
                 rs.getInt("id_livre"),
                 rs.getString("titre"),
                 rs.getString("auteur"),
@@ -150,6 +160,10 @@ public class LivreDAO {
                 d != null ? d.toLocalDate() : null,
                 rs.getString("image_couverture")
         );
+        l.setModifiePar(rs.getString("modifie_par"));
+        java.sql.Timestamp ts = rs.getTimestamp("modifie_le");
+        if (ts != null) l.setModifieLe(ts.toLocalDateTime());
+        return l;
     }
     public int getTotalExemplaires() {
         String sql = "SELECT COALESCE(SUM(nombre_exemplaires), 0) FROM livres";
@@ -170,4 +184,17 @@ public class LivreDAO {
         } catch (SQLException e) { System.err.println(e.getMessage()); }
         return 0;
     }
+    
+    public boolean isbnExiste(String isbn, int idLivreExclu) {
+    String sql = "SELECT COUNT(*) FROM livres WHERE isbn = ? AND id_livre != ?";
+    try (Connection c = DatabaseConnection.getConnection();
+         PreparedStatement s = c.prepareStatement(sql)) {
+        s.setString(1, isbn);
+        s.setInt(2, idLivreExclu);
+        try (ResultSet rs = s.executeQuery()) {
+            if (rs.next()) return rs.getInt(1) > 0;
+        }
+    } catch (SQLException e) { System.err.println(e.getMessage()); }
+    return false;
+}
 }

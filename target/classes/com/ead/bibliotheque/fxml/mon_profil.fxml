@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ead.bibliotheque.controllers.MonProfilController"
+            fitToWidth="true" hbarPolicy="NEVER"
+            styleClass="fond-application"
+            style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="20" style="-fx-background-color: transparent;">
+        <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
+
+        <!-- En-tête profil -->
+        <VBox styleClass="entete-dashboard" spacing="0">
+            <padding><Insets top="16" right="20" bottom="16" left="20"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="labelAvatarGrand" text="AD" styleClass="avatar-grand"/>
+                <VBox spacing="4" VBox.vgrow="ALWAYS">
+                    <Label fx:id="labelNomComplet" text="—" styleClass="page-titre"/>
+                    <Label fx:id="labelLoginProfil" text="@—" styleClass="page-sous-titre"/>
+                    <Label fx:id="labelIdProfil" text="ID : —" styleClass="kpi-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Ligne stats : Membre depuis + emprunts + retours -->
+        <HBox spacing="14">
+            <VBox styleClass="carte-dos-livre,carte-dos-livre-bleu" spacing="6" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Membre depuis" styleClass="carte-label"/>
+                <Label fx:id="statCreeLe" text="—" styleClass="carte-val-moyen"/>
+                <Label text="Date de création du compte" styleClass="carte-pied"/>
+            </VBox>
+
+            <VBox styleClass="carte-plate" spacing="6" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Emprunts enregistrés" styleClass="carte-label"/>
+                <Label fx:id="statTotalEmprunts" text="—" styleClass="carte-val-moyen"/>
+                <Label text="Total dans le système" styleClass="carte-pied"/>
+            </VBox>
+
+            <VBox styleClass="carte-plate" spacing="6" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Retours effectués" styleClass="carte-label"/>
+                <Label fx:id="statTotalRetours" text="—" styleClass="carte-val-moyen"/>
+                <Label text="Livres rendus" styleClass="carte-pied"/>
+            </VBox>
+        </HBox>
+
+        <!-- Ligne stats : adhérents + livres -->
+        <HBox spacing="14">
+            <VBox styleClass="carte-plate" spacing="6" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Adhérents inscrits" styleClass="carte-label"/>
+                <Label fx:id="statTotalAdherents" text="—" styleClass="carte-val-moyen"/>
+                <Label text="Membres enregistrés" styleClass="carte-pied"/>
+            </VBox>
+
+            <VBox styleClass="carte-plate" spacing="6" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Livres dans le catalogue" styleClass="carte-label"/>
+                <Label fx:id="statTotalLivres" text="—" styleClass="carte-val-moyen"/>
+                <Label text="Exemplaires au total" styleClass="carte-pied"/>
+            </VBox>
+        </HBox>
+
+        <!-- Formulaires de modification du profil -->
+        <HBox spacing="14" alignment="TOP_LEFT">
+
+            <!-- Changer le login -->
+            <VBox styleClass="carte-plate" spacing="12" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="MODIFIER LE LOGIN" styleClass="section-label"/>
+                <VBox spacing="4">
+                    <Label text="NOUVEAU LOGIN" styleClass="form-field-label"/>
+                    <TextField fx:id="fieldNouveauLogin" styleClass="champ-recherche"
+                               promptText="Nouvel identifiant de connexion"/>
+                </VBox>
+                <Label fx:id="labelErreurLogin" styleClass="label-erreur" text=""
+                       wrapText="true" visible="false" managed="false"/>
+                <Label fx:id="labelSuccesLogin" styleClass="label-succes" text=""
+                       wrapText="true" visible="false" managed="false"/>
+                <Button text="Enregistrer le login" styleClass="bouton-principal"
+                        onAction="#onSauvegarderLogin" maxWidth="Infinity"/>
+            </VBox>
+
+            <!-- Changer le mot de passe -->
+            <VBox styleClass="carte-plate" spacing="12" HBox.hgrow="ALWAYS">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="CHANGER LE MOT DE PASSE" styleClass="section-label"/>
+                <VBox spacing="4">
+                    <Label text="MOT DE PASSE ACTUEL" styleClass="form-field-label"/>
+                    <PasswordField fx:id="fieldAncienMdp" styleClass="champ-recherche" promptText="••••••••"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="NOUVEAU MOT DE PASSE" styleClass="form-field-label"/>
+                    <PasswordField fx:id="fieldNouveauMdp" styleClass="champ-recherche" promptText="••••••••"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="CONFIRMER" styleClass="form-field-label"/>
+                    <PasswordField fx:id="fieldConfirmMdp" styleClass="champ-recherche" promptText="••••••••"/>
+                </VBox>
+                <Label fx:id="labelErreurMdp" styleClass="label-erreur" text=""
+                       wrapText="true" visible="false" managed="false"/>
+                <Label fx:id="labelSuccesMdp" styleClass="label-succes" text=""
+                       wrapText="true" visible="false" managed="false"/>
+                <Button text="Changer le mot de passe" styleClass="bouton-principal"
+                        onAction="#onSauvegarderMdp" maxWidth="Infinity"/>
+            </VBox>
+
+        </HBox>
+
+    </VBox>
+</ScrollPane>

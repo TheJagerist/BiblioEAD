@@ -15,6 +15,16 @@ public class Livre {
     private final IntegerProperty exemplairesDisponibles = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> dateAjout = new SimpleObjectProperty<>();
     private final StringProperty imageCouverture = new SimpleStringProperty();
+    private final StringProperty modifiePar = new SimpleStringProperty();
+    private final javafx.beans.property.ObjectProperty<java.time.LocalDateTime> modifieLe = new javafx.beans.property.SimpleObjectProperty<>();
+
+    public String getModifiePar() { return modifiePar.get(); }
+    public void setModifiePar(String v) { modifiePar.set(v); }
+    public StringProperty modifieParProperty() { return modifiePar; }
+
+    public java.time.LocalDateTime getModifieLe() { return modifieLe.get(); }
+    public void setModifieLe(java.time.LocalDateTime v) { modifieLe.set(v); }
+    public javafx.beans.property.ObjectProperty<java.time.LocalDateTime> modifieLeProperty() { return modifieLe; }
 
     public Livre() {}
 

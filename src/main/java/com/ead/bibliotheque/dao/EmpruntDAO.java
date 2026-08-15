@@ -46,7 +46,8 @@ public class EmpruntDAO {
                    a.nom || ' ' || a.prenom AS nom_adherent,
                    a.num_carte,
                    l.titre,
-                   e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut
+                   e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut,
+                   e.cree_par
             FROM emprunts e
             JOIN adherents a ON a.id_adherent = e.id_adherent
             JOIN livres    l ON l.id_livre    = e.id_livre
@@ -63,7 +64,8 @@ public class EmpruntDAO {
                    a.nom || ' ' || a.prenom AS nom_adherent,
                    a.num_carte,
                    l.titre,
-                   e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut
+                   e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut,
+                   e.cree_par
             FROM emprunts e
             JOIN adherents a ON a.id_adherent = e.id_adherent
             JOIN livres    l ON l.id_livre    = e.id_livre
@@ -154,9 +156,9 @@ public class EmpruntDAO {
         LocalDate dateRetourPrevue = dateEmprunt.plusDays(14); // RG-02
 
         String sqlEmprunt = """
-            INSERT INTO emprunts (id_adherent, id_livre, date_emprunt, date_retour_prevue, statut)
-            VALUES (?, ?, ?, ?, 'EN_COURS')
-            """;
+    INSERT INTO emprunts (id_adherent, id_livre, date_emprunt, date_retour_prevue, statut, cree_par)
+    VALUES (?, ?, ?, ?, 'EN_COURS', ?)
+    """;
         String sqlDispo = "UPDATE livres SET exemplaires_disponibles = exemplaires_disponibles - 1 WHERE id_livre = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -168,6 +170,9 @@ public class EmpruntDAO {
                 s1.setInt(2, idLivre);
                 s1.setDate(3, Date.valueOf(dateEmprunt));
                 s1.setDate(4, Date.valueOf(dateRetourPrevue));
+                String login = com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte() != null
+                ? com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte().getLogin() : "système";
+                s1.setString(5, login);
                 s1.executeUpdate();
 
                 s2.setInt(1, idLivre);
@@ -244,7 +249,8 @@ public class EmpruntDAO {
                a.nom || ' ' || a.prenom AS nom_adherent,
                a.num_carte,
                l.titre,
-               e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut
+               e.date_emprunt, e.date_retour_prevue, e.date_retour_effectif, e.statut,
+               e.cree_par
         FROM emprunts e
         JOIN adherents a ON a.id_adherent = e.id_adherent
         JOIN livres    l ON l.id_livre    = e.id_livre
@@ -298,7 +304,7 @@ public class EmpruntDAO {
 
     private Emprunt map(ResultSet rs) throws SQLException {
         Date retourEffectifSql = rs.getDate("date_retour_effectif");
-        return new Emprunt(
+        Emprunt e = new Emprunt(
                 rs.getInt("id_emprunt"),
                 rs.getInt("id_adherent"),
                 rs.getInt("id_livre"),
@@ -310,6 +316,8 @@ public class EmpruntDAO {
                 retourEffectifSql != null ? retourEffectifSql.toLocalDate() : null,
                 Emprunt.Statut.valueOf(rs.getString("statut"))
         );
+        e.setCreePar(rs.getString("cree_par"));
+        return e;
     }
 
     public int compterARendreCetteSemaine() {
@@ -334,6 +342,44 @@ public int compterTotalLivresEmpruntes() {
         if (rs.next()) return rs.getInt(1);
     } catch (SQLException e) { System.err.println(e.getMessage()); }
     return 0;
+}
+
+public int compterTotalEmprunts() {
+    String sql = "SELECT COUNT(*) FROM emprunts";
+    try (Connection c = DatabaseConnection.getConnection();
+         PreparedStatement s = c.prepareStatement(sql);
+         ResultSet rs = s.executeQuery()) {
+        if (rs.next()) return rs.getInt(1);
+    } catch (SQLException e) { System.err.println(e.getMessage()); }
+    return 0;
+}
+
+public int compterTotalRetours() {
+    String sql = "SELECT COUNT(*) FROM emprunts WHERE statut = 'RENDU'";
+    try (Connection c = DatabaseConnection.getConnection();
+         PreparedStatement s = c.prepareStatement(sql);
+         ResultSet rs = s.executeQuery()) {
+        if (rs.next()) return rs.getInt(1);
+    } catch (SQLException e) { System.err.println(e.getMessage()); }
+    return 0;
+}
+
+public java.util.Map<String, Integer> compterEmpruntsParGenre() {
+    String sql = """
+        SELECT l.genre, COUNT(*) AS nb
+        FROM emprunts e
+        JOIN livres l ON l.id_livre = e.id_livre
+        GROUP BY l.genre
+        ORDER BY nb DESC
+        LIMIT 3
+        """;
+    java.util.Map<String, Integer> res = new java.util.LinkedHashMap<>();
+    try (Connection c = DatabaseConnection.getConnection();
+         PreparedStatement s = c.prepareStatement(sql);
+         ResultSet rs = s.executeQuery()) {
+        while (rs.next()) res.put(rs.getString("genre"), rs.getInt("nb"));
+    } catch (SQLException e) { System.err.println(e.getMessage()); }
+    return res;
 }
 
 }

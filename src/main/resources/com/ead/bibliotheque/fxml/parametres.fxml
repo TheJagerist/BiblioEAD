@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ead.bibliotheque.controllers.ParametresController"
+      styleClass="fond-application" VBox.vgrow="ALWAYS">
+
+    <!-- Liste des administrateurs -->
+    <VBox spacing="12" HBox.hgrow="ALWAYS">
+        <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+        <Label text="Gestion des administrateurs" styleClass="page-titre"/>
+        <Label text="Gérez les comptes des bibliothécaires ayant accès à l'application." styleClass="kpi-label"/>
+
+        <TableView fx:id="tableAdmins" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colLogin" text="Login" prefWidth="160"/>
+                <TableColumn fx:id="colNom" text="Nom" prefWidth="160"/>
+                <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="160"/>
+            </columns>
+            <placeholder><Label text="Aucun administrateur."/></placeholder>
+        </TableView>
+
+        <HBox spacing="8">
+            <Button fx:id="btnAjouter" text="Créer" styleClass="bouton-principal" onAction="#onAjouter"/>
+            <Button fx:id="btnSupprimer" text="Supprimer" styleClass="bouton-action-danger"
+                    disable="true" onAction="#onSupprimer"/>
+        </HBox>
+    </VBox>
+
+    <!-- Formulaire latéral de création -->
+    <VBox fx:id="panneauFormulaire" prefWidth="380" styleClass="panneau-lateral"
+          managed="false" visible="false">
+        <HBox alignment="CENTER_LEFT" styleClass="panneau-lateral-header">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <Label text="Nouvel administrateur" styleClass="section-label" HBox.hgrow="ALWAYS"/>
+            <Button text="×" styleClass="bouton-action" onAction="#onFermerPanneau"/>
+        </HBox>
+
+        <VBox spacing="12" VBox.vgrow="ALWAYS">
+            <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
+            <VBox spacing="4">
+                <Label text="LOGIN" styleClass="form-field-label"/>
+                <TextField fx:id="fieldLogin" styleClass="champ-recherche" promptText="Identifiant de connexion"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="NOM" styleClass="form-field-label"/>
+                <TextField fx:id="fieldNom" styleClass="champ-recherche" promptText="Nom"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="PRÉNOM" styleClass="form-field-label"/>
+                <TextField fx:id="fieldPrenom" styleClass="champ-recherche" promptText="Prénom"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="MOT DE PASSE" styleClass="form-field-label"/>
+                <PasswordField fx:id="fieldMdp" styleClass="champ-recherche" promptText="Mot de passe"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="CONFIRMER LE MOT DE PASSE" styleClass="form-field-label"/>
+                <PasswordField fx:id="fieldMdpConfirm" styleClass="champ-recherche" promptText="Confirmer le mot de passe"/>
+            </VBox>
+            <Label fx:id="labelErreur" styleClass="label-erreur" text="" wrapText="true"
+                   visible="false" managed="false"/>
+        </VBox>
+
+        <HBox spacing="8" styleClass="panneau-lateral-footer">
+            <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+            <Button text="Annuler" styleClass="bouton-action" onAction="#onFermerPanneau"/>
+            <Button text="Enregistrer" styleClass="bouton-principal" onAction="#onSauvegarder"
+                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+    </VBox>
+</HBox>

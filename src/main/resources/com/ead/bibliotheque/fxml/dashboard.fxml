@@ -129,34 +129,34 @@
 
                 <VBox spacing="5">
                     <HBox>
-                        <Label text="Littérature" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label text="80%" styleClass="genre-pourcentage"/>
+                        <Label fx:id="genreNom1" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="genrePct1" text="—%" styleClass="genre-pourcentage"/>
                     </HBox>
                     <StackPane alignment="CENTER_LEFT">
                         <Region styleClass="barre-genre-fond,barre-genre-fond-rouge" maxWidth="Infinity" prefHeight="8"/>
-                        <Region styleClass="barre-genre-remplissage-rouge" prefWidth="128" maxWidth="128" prefHeight="8"/>
+                        <Region fx:id="barreGenre1" styleClass="barre-genre-remplissage-rouge" prefWidth="0" maxWidth="160" prefHeight="8"/>
                     </StackPane>
                 </VBox>
 
                 <VBox spacing="5">
                     <HBox>
-                        <Label text="Sciences" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label text="55%" styleClass="genre-pourcentage"/>
+                        <Label fx:id="genreNom2" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="genrePct2" text="—%" styleClass="genre-pourcentage"/>
                     </HBox>
                     <StackPane alignment="CENTER_LEFT">
                         <Region styleClass="barre-genre-fond,barre-genre-fond-bleu" maxWidth="Infinity" prefHeight="8"/>
-                        <Region styleClass="barre-genre-remplissage-bleu" prefWidth="88" maxWidth="88" prefHeight="8"/>
+                        <Region fx:id="barreGenre2" styleClass="barre-genre-remplissage-bleu" prefWidth="0" maxWidth="160" prefHeight="8"/>
                     </StackPane>
                 </VBox>
 
                 <VBox spacing="5">
                     <HBox>
-                        <Label text="Histoire" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label text="35%" styleClass="genre-pourcentage"/>
+                        <Label fx:id="genreNom3" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="genrePct3" text="—%" styleClass="genre-pourcentage"/>
                     </HBox>
                     <StackPane alignment="CENTER_LEFT">
                         <Region styleClass="barre-genre-fond,barre-genre-fond-gris" maxWidth="Infinity" prefHeight="8"/>
-                        <Region styleClass="barre-genre-remplissage-gris" prefWidth="56" maxWidth="56" prefHeight="8"/>
+                        <Region fx:id="barreGenre3" styleClass="barre-genre-remplissage-gris" prefWidth="0" maxWidth="160" prefHeight="8"/>
                     </StackPane>
                 </VBox>
 

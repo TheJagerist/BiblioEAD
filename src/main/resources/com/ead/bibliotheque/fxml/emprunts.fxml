@@ -60,6 +60,7 @@
                                     <TableColumn fx:id="colDateRetour"    text="Retour prévu"   prefWidth="110"/>
                                     <TableColumn fx:id="colJoursRestants" text="Jours restants" prefWidth="110"/>
                                     <TableColumn fx:id="colStatut"        text="Statut"         prefWidth="100"/>
+                                    <TableColumn fx:id="colCreePar"       text="Enregistré par"  prefWidth="130"/>
                                 </columns>
                                 <placeholder><Label text="Aucun emprunt en cours."/></placeholder>
                             </TableView>
@@ -138,10 +139,13 @@
                     <content>
                         <VBox spacing="12" styleClass="fond-application">
                             <padding><Insets top="12" right="0" bottom="8" left="0"/></padding>
-                            <TextField fx:id="fieldRechercheHisto"
-                                       promptText="Adhérent, titre, n° carte..."
-                                       styleClass="champ-recherche"
-                                       onKeyReleased="#onRechercheHisto"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <TextField fx:id="fieldRechercheHisto"
+                                           promptText="Adhérent, titre, n° carte..."
+                                           styleClass="champ-recherche"
+                                           HBox.hgrow="ALWAYS"
+                                           onKeyReleased="#onRechercheHisto"/>
+                            </HBox>
                             <TableView fx:id="tableHistorique" VBox.vgrow="ALWAYS">
                                 <columns>
                                     <TableColumn fx:id="colAdherentH"    text="Adhérent"     prefWidth="170"/>
@@ -149,6 +153,7 @@
                                     <TableColumn fx:id="colDateEmpruntH" text="Date emprunt" prefWidth="110"/>
                                     <TableColumn fx:id="colDateRetourH"  text="Retour prévu" prefWidth="110"/>
                                     <TableColumn fx:id="colStatutH"      text="Statut"       prefWidth="100"/>
+                                    <TableColumn fx:id="colCreeParH"     text="Enregistré par" prefWidth="130"/>
                                 </columns>
                                 <placeholder><Label text="Aucun historique."/></placeholder>
                             </TableView>
@@ -161,7 +166,7 @@
     </VBox>
 
     <!-- ===== PANNEAU LATÉRAL ===== -->
-    <VBox fx:id="panneauFormulaire" prefWidth="260"
+    <VBox fx:id="panneauFormulaire" prefWidth="500"
           styleClass="panneau-lateral"
           managed="false" visible="false">
 
@@ -245,6 +250,7 @@
                     <HBox><Label text="Retard actuel : " styleClass="kpi-label"/>
                         <Label fx:id="labelFicheRetardJours" text="—" styleClass="kpi-val-red"/></HBox>
                 </VBox>
+
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="SÉVÉRITÉ" styleClass="form-field-label"/>
                     <Label fx:id="labelFicheSeverite" text="—" styleClass="lien-navigation"/>

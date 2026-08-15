@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import java.util.List;
 
+
 public class DashboardController {
 
     // ── Ligne hero ────────────────────────────────────────────
@@ -23,6 +24,9 @@ public class DashboardController {
     @FXML private Label  kpiLivres;
     @FXML private Label  labelLivresTotal;
     @FXML private Region barreProgressionLivres;   // largeur calculée dynamiquement
+    @FXML private Label genreNom1, genreNom2, genreNom3;
+    @FXML private Label genrePct1, genrePct2, genrePct3;
+    @FXML private Region barreGenre1, barreGenre2, barreGenre3;
 
     // ── Carte "Ce mois" ───────────────────────────────────────
     @FXML private Label statNouveauxEmprunts;
@@ -74,6 +78,7 @@ public class DashboardController {
         for (int i = 0; i < activite.size(); i++) {
             Emprunt e = activite.get(i);
             boolean derniere = (i == activite.size() - 1);
+            
 
             String couleurPuce = switch (e.getStatut()) {
                 case RETARD -> "#CC0000";
@@ -120,6 +125,21 @@ public class DashboardController {
 
             javafx.scene.layout.HBox entree = new javafx.scene.layout.HBox(10, colPuce, texte);
             conteneurTimeline.getChildren().add(entree);
+        }
+        // Genres empruntés (top 3)
+        var genres = empruntDAO.compterEmpruntsParGenre();
+        var entrees = new java.util.ArrayList<>(genres.entrySet());
+        int totalGenres = genres.values().stream().mapToInt(Integer::intValue).sum();
+        Label[] noms = {genreNom1, genreNom2, genreNom3};
+        Label[] pcts = {genrePct1, genrePct2, genrePct3};
+        Region[] barres = {barreGenre1, barreGenre2, barreGenre3};
+        for (int i = 0; i < Math.min(3, entrees.size()); i++) {
+            int nb = entrees.get(i).getValue();
+            int pct = totalGenres > 0 ? nb * 100 / totalGenres : 0;
+            noms[i].setText(entrees.get(i).getKey());
+            pcts[i].setText(pct + "%");
+            barres[i].setPrefWidth(pct * 1.6); // max ~160px pour 100%
+            barres[i].setMaxWidth(pct * 1.6);
         }
     }
 }

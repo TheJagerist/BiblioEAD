@@ -26,28 +26,28 @@
             <VBox spacing="2" VBox.vgrow="ALWAYS">
             <padding><Insets top="12"/></padding>
 
-                <Button fx:id="btnDashboard" text="Tableau de bord"
+                <Button fx:id="btnDashboard" id="btnDashboard" text="Tableau de bord"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
                     <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnAdherents" text="Adhérents"
+                <Button fx:id="btnAdherents" id="btnAdherents" text="Adhérents"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
                     <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnCatalogue" text="Catalogue"
+                <Button fx:id="btnCatalogue" id="btnCatalogue" text="Catalogue"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
                     <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnEmprunts" text="Gestion des Activités"
+                <Button fx:id="btnEmprunts" id="btnEmprunts" text="Gestion des Activités"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
@@ -55,8 +55,16 @@
                 </Button>
             </VBox>
 
+            <!-- Gestion des admins -->
+             <Button fx:id="btnParametres" id="btnParametres" text="Gestion des admins"
+                    styleClass="lien-navigation"
+                    maxWidth="Infinity" alignment="CENTER_LEFT"
+                    onAction="#handleNav">
+                <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
+            </Button>
+
             <!-- Bouton déconnexion en bas -->
-            <Button fx:id="btnDeconnexion" text="Déconnexion"
+            <Button fx:id="btnDeconnexion" id="btnDeconnexion" text="Déconnexion"
                     styleClass="bouton-action"
                     maxWidth="Infinity"
                     onAction="#handleDeconnexion">
@@ -83,7 +91,10 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <!-- Avatar + nom admin -->
-                <HBox alignment="CENTER" spacing="8">
+                <HBox fx:id="hboxProfil"
+                      alignment="CENTER" spacing="8"
+                      style="-fx-cursor:hand;"
+                      focusTraversable="true">
                     <StackPane prefWidth="32" prefHeight="32"
                                style="-fx-background-color:#333333; -fx-background-radius:16;">
                         <Label fx:id="labelAvatar" text="AB"

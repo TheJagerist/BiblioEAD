@@ -1,7 +1,9 @@
 package com.ead.bibliotheque.controllers;
 
 import com.ead.bibliotheque.dao.AdherentDAO;
+import com.ead.bibliotheque.dao.EmpruntDAO;
 import com.ead.bibliotheque.models.Adherent;
+import com.ead.bibliotheque.models.Emprunt;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,6 +28,8 @@ public class AdherentsController implements Initializable {
     @FXML private TableColumn<Adherent, String>    colFiliere;
     @FXML private TableColumn<Adherent, String>    colNumCarte;
     @FXML private TableColumn<Adherent, LocalDate> colInscription;
+    @FXML private TableColumn<Adherent, String> colModifiePar;
+    @FXML private TableColumn<Adherent, java.time.LocalDateTime> colModifieLe;
 
     // ── Toolbar ──────────────────────────────────────────────
     @FXML private TextField  fieldRecherche;
@@ -89,6 +93,16 @@ public class AdherentsController implements Initializable {
         colFiliere.setCellValueFactory(new PropertyValueFactory<>("filiere"));
         colNumCarte.setCellValueFactory(new PropertyValueFactory<>("numCarte"));
         colInscription.setCellValueFactory(new PropertyValueFactory<>("dateInscription"));
+        colModifiePar.setCellValueFactory(new PropertyValueFactory<>("modifiePar"));
+        colModifieLe.setCellValueFactory(new PropertyValueFactory<>("modifieLe"));
+        colModifieLe.setCellFactory(col -> new TableCell<>() {
+            private static final java.time.format.DateTimeFormatter FMT =
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            @Override protected void updateItem(java.time.LocalDateTime v, boolean empty) {
+                super.updateItem(v, empty);
+                setText(v == null || empty ? null : v.format(FMT));
+            }
+        });
 
         // Combos
         comboFiliere.setItems(FXCollections.observableArrayList(FILIERES));
@@ -196,15 +210,54 @@ public class AdherentsController implements Initializable {
         });
     }
 
-    // ── Historique (placeholder) ──────────────────────────────
+    // ── Historique des emprunts de l'adhérent sélectionné ──
     @FXML
     private void onHistorique() {
         Adherent sel = tableAdherents.getSelectionModel().getSelectedItem();
         if (sel == null) return;
-        // TODO : ouvrir un dialog ou filtrer la vue Emprunts
-        new Alert(Alert.AlertType.INFORMATION,
-                "Historique de " + sel.getNom() + " — à implémenter.")
-                .showAndWait();
+
+        List<Emprunt> historique = new EmpruntDAO().listerParAdherent(sel.getIdAdherent());
+        String contenu = construireHistoriqueTexte(sel, historique);
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Historique des emprunts");
+        dialog.setHeaderText("Activité de " + sel.getNom() + " " + sel.getPrenom());
+
+        TextArea area = new TextArea(contenu);
+        area.setEditable(false);
+        area.setWrapText(true);
+        area.setPrefRowCount(18);
+        area.setPrefColumnCount(90);
+
+        dialog.getDialogPane().setContent(area);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
+    private String construireHistoriqueTexte(Adherent adherent, List<Emprunt> historique) {
+        if (historique == null || historique.isEmpty()) {
+            return "Aucun emprunt enregistré pour " + adherent.getNom() + " " + adherent.getPrenom() + ".";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Adhérent : ").append(adherent.getNom()).append(" ").append(adherent.getPrenom())
+          .append("\nCarte : ").append(adherent.getNumCarte())
+          .append("\n\n");
+
+        for (Emprunt e : historique) {
+            sb.append("- Livre : ").append(e.getTitreLivre())
+              .append("\n  Emprunt : ").append(e.getDateEmprunt())
+              .append(" | Retour prévu : ").append(e.getDateRetourPrevue());
+
+            if (e.getDateRetourEffectif() != null) {
+                sb.append(" | Retourné le : ").append(e.getDateRetourEffectif());
+            }
+
+            sb.append(" | Statut : ").append(e.getStatut());
+            sb.append("\n\n");
+        }
+
+        return sb.toString();
     }
 
     // ── Sauvegarder (ajout ou modif) ─────────────────────────

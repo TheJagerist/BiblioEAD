@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
@@ -18,11 +19,13 @@ public class MenuPrincipalController {
     @FXML private Label labelTitreVue;
     @FXML private Label labelAdmin;
     @FXML private Label labelAvatar;
+    @FXML private HBox hboxProfil;
 
     @FXML private Button btnDashboard;
     @FXML private Button btnAdherents;
     @FXML private Button btnCatalogue;
     @FXML private Button btnEmprunts;
+    @FXML private Button btnParametres;
 
     @FXML
     private void initialize() {
@@ -39,6 +42,7 @@ public class MenuPrincipalController {
         chargerVue("dashboard.fxml", "Tableau de bord");
         btnDashboard.getStyleClass().remove("lien-navigation");
         btnDashboard.getStyleClass().add("lien-navigation-actif");
+        hboxProfil.setOnMouseClicked(event -> ouvrirMonProfil());
     }
 
     private void chargerVue(String fxmlFile, String titre) {
@@ -55,7 +59,7 @@ public class MenuPrincipalController {
     @FXML
 private void handleNav(ActionEvent e) {
     // Retirer la classe active de tous les boutons
-    for (Button btn : new Button[]{btnDashboard, btnAdherents, btnCatalogue, btnEmprunts}) {
+    for (Button btn : new Button[]{btnDashboard, btnAdherents, btnCatalogue, btnEmprunts, btnParametres}) {
         btn.getStyleClass().remove("lien-navigation-actif");
         if (!btn.getStyleClass().contains("lien-navigation"))
             btn.getStyleClass().add("lien-navigation");
@@ -70,7 +74,13 @@ private void handleNav(ActionEvent e) {
     if (src == btnAdherents) chargerVue("adherents.fxml",  "Gestion des adhérents");
     if (src == btnCatalogue) chargerVue("catalogue.fxml",  "Catalogue de livres");
     if (src == btnEmprunts)  chargerVue("emprunts.fxml",   "Gestion des Activités");
+    if (src == btnParametres) chargerVue("parametres.fxml", "Paramètres");
 }
+
+    @FXML
+    private void ouvrirMonProfil() {
+        chargerVue("mon_profil.fxml", "Mon profil");
+    }
 
     @FXML
     private void handleDeconnexion(ActionEvent e) {

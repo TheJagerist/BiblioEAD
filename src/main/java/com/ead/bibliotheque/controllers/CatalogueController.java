@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.StackPane;
 
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,11 +39,12 @@ public class CatalogueController implements Initializable {
     @FXML private TableColumn<Livre, Integer> colAnnee;
     @FXML private TableColumn<Livre, String>  colIsbn;
     @FXML private TableColumn<Livre, String>  colDispo;
+    @FXML private TableColumn<Livre, String> colModifiePar;
+    @FXML private TableColumn<Livre, java.time.LocalDateTime> colModifieLe;
 
     // ── Boutons ──────────────────────────────────────────────
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
-    @FXML private Button btnExemplaires;
 
     // ── Panneau latéral ──────────────────────────────────────
     @FXML private VBox panneauFormulaire;
@@ -81,6 +83,16 @@ public class CatalogueController implements Initializable {
         colIsbn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
         // Colonne dispo : affiche "X / Y"
         colDispo.setCellValueFactory(new PropertyValueFactory<>("dispoLabel"));
+        colModifiePar.setCellValueFactory(new PropertyValueFactory<>("modifiePar"));
+        colModifieLe.setCellValueFactory(new PropertyValueFactory<>("modifieLe"));
+        colModifieLe.setCellFactory(col -> new TableCell<>() {
+            private static final java.time.format.DateTimeFormatter FMT =
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            @Override protected void updateItem(java.time.LocalDateTime v, boolean empty) {
+                super.updateItem(v, empty);
+                setText(v == null || empty ? null : v.format(FMT));
+            }
+        });
 
         comboGenre.setItems(FXCollections.observableArrayList(GENRES));
         comboGenreForm.setItems(FXCollections.observableArrayList(GENRES));
@@ -95,13 +107,45 @@ public class CatalogueController implements Initializable {
         rafraichirNouveautes();
     }
 
-    private void rafraichirNouveautes() {
-        boxNouveautes.getChildren().clear();
-        tousLesLivres.stream()
-                .filter(Livre::isNouveaute) // ajouté dans les 7 derniers jours
-                .limit(8)
-                .forEach(l -> boxNouveautes.getChildren().add(creerCarteNouveaute(l)));
+    private static final int MAX_NOUVEAUTES_VISIBLE = 8;
+private List<Livre> toutesLesNouveautes = new java.util.ArrayList<>();
+
+private void rafraichirNouveautes() {
+    boxNouveautes.getChildren().clear();
+    toutesLesNouveautes = tousLesLivres.stream()
+            .filter(Livre::isNouveaute)
+            .collect(java.util.stream.Collectors.toList());
+
+    toutesLesNouveautes.stream().limit(MAX_NOUVEAUTES_VISIBLE)
+            .forEach(l -> boxNouveautes.getChildren().add(creerCarteNouveaute(l)));
+
+    if (toutesLesNouveautes.size() > MAX_NOUVEAUTES_VISIBLE) {
+        Button voirPlus = new Button("Voir\ntout →");
+        voirPlus.setStyle("-fx-background-color: #f0f4f8; -fx-border-color: #cccccc; -fx-border-width:1;" +
+                "-fx-border-radius:6; -fx-background-radius:6; -fx-font-family:'PublicSans';" +
+                "-fx-font-size:11px; -fx-text-fill:#2E7A98; -fx-cursor:hand; -fx-min-width:60;");
+        voirPlus.setPrefHeight(138);
+        voirPlus.setOnAction(e -> afficherToutesNouveautes());
+        boxNouveautes.getChildren().add(voirPlus);
     }
+}
+
+private void afficherToutesNouveautes() {
+    javafx.scene.layout.FlowPane flow = new javafx.scene.layout.FlowPane(12, 12);
+    flow.setPadding(new javafx.geometry.Insets(12));
+    toutesLesNouveautes.forEach(l -> flow.getChildren().add(creerCarteNouveaute(l)));
+
+    javafx.scene.control.ScrollPane sp = new javafx.scene.control.ScrollPane(flow);
+    sp.setFitToWidth(true);
+    sp.setPrefSize(700, 500);
+
+    javafx.scene.Scene scene = new javafx.scene.Scene(sp);
+    javafx.stage.Stage stage = new javafx.stage.Stage();
+    stage.setTitle("Ajoutés cette semaine — tous les livres");
+    stage.setScene(scene);
+    stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+    stage.show();
+}
 
     private VBox creerCarteNouveaute(Livre l) {
         // Placeholder coloré
@@ -144,6 +188,14 @@ public class CatalogueController implements Initializable {
 
         VBox carte = new VBox(5, cover, titre, auteur);
         carte.setPrefWidth(90);
+        carte.setOnMouseClicked(e -> {
+    tableCatalogue.getSelectionModel().select(l);
+    tableCatalogue.scrollTo(l);
+    btnModifier.setDisable(false);
+    btnSupprimer.setDisable(false);
+    onModifier();
+    });
+    carte.setStyle("-fx-cursor: hand;");
         return carte;
     }
 
@@ -153,7 +205,6 @@ public class CatalogueController implements Initializable {
         boolean actif = tableCatalogue.getSelectionModel().getSelectedItem() != null;
         btnModifier.setDisable(!actif);
         btnSupprimer.setDisable(!actif);
-        btnExemplaires.setDisable(!actif);
     }
 
     @FXML
@@ -228,17 +279,6 @@ public class CatalogueController implements Initializable {
         });
     }
 
-    // ── Gestion exemplaires ───────────────────────────────────
-    @FXML
-    private void onGererExemplaires() {
-        Livre sel = tableCatalogue.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
-        // TODO : ouvrir un dialog dédié ou un panneau secondaire
-        new Alert(Alert.AlertType.INFORMATION,
-                "Gestion des exemplaires de « " + sel.getTitre() + " » — à implémenter.")
-                .showAndWait();
-    }
-
     // ── Sauvegarder ──────────────────────────────────────────
     @FXML
     private void onSauvegarder() {
@@ -305,6 +345,14 @@ public class CatalogueController implements Initializable {
         if (fieldTitre.getText().isBlank())  { afficherErreur(true, "Le titre est obligatoire."); return false; }
         if (fieldAuteur.getText().isBlank())  { afficherErreur(true, "L'auteur est obligatoire."); return false; }
         if (comboGenreForm.getValue() == null){ afficherErreur(true, "Sélectionnez un genre."); return false; }
+        String isbn = fieldIsbn.getText().trim();
+        if (!isbn.isBlank()) {
+            int idExclu = livreEnCours != null ? livreEnCours.getIdLivre() : 0;
+            if (dao.isbnExiste(isbn, idExclu)) {
+                afficherErreur(true, "Cet ISBN existe déjà dans le catalogue.");
+                return false;
+            }
+        }
         afficherErreur(false, "");
         return true;
     }
@@ -347,8 +395,5 @@ public class CatalogueController implements Initializable {
     private void desactiverBoutons() {
         btnModifier.setDisable(true);
         btnSupprimer.setDisable(true);
-        btnExemplaires.setDisable(true);
-
-
     }
 }

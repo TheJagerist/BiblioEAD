@@ -7,6 +7,7 @@ public class Administrateur {
     private String motDePasse; // hash BCrypt, jamais le mot de passe en clair
     private String nom;
     private String prenom;
+    private java.time.LocalDateTime creeLe;
 
     public Administrateur() {
     }
@@ -57,5 +58,13 @@ public class Administrateur {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
+    }
+
+    public java.time.LocalDateTime getCreeLe() {
+        return creeLe;
+    }
+
+    public void setCreeLe(java.time.LocalDateTime creeLe) {
+        this.creeLe = creeLe;
     }
 }

@@ -6,6 +6,8 @@ import com.ead.bibliotheque.models.Administrateur;
 import com.ead.bibliotheque.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -86,4 +88,45 @@ public class LoginController {
             alert.showAndWait();
         }
     }
+
+    @FXML
+    private void onMotDePasseOublie() {
+    Dialog<ButtonType> dialog = new Dialog<>();
+    dialog.setTitle("Réinitialisation du mot de passe");
+    dialog.setHeaderText("Entrez votre identifiant et un nouveau mot de passe.");
+    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+    javafx.scene.control.TextField login = new javafx.scene.control.TextField();
+    login.setPromptText("Identifiant");
+    javafx.scene.control.PasswordField mdp = new javafx.scene.control.PasswordField();
+    mdp.setPromptText("Nouveau mot de passe");
+    javafx.scene.control.PasswordField confirm = new javafx.scene.control.PasswordField();
+    confirm.setPromptText("Confirmer le mot de passe");
+
+    javafx.scene.layout.VBox box = new javafx.scene.layout.VBox(8, login, mdp, confirm);
+    box.setPadding(new javafx.geometry.Insets(12));
+    dialog.getDialogPane().setContent(box);
+
+    dialog.showAndWait().ifPresent(r -> {
+        if (r == ButtonType.OK) {
+            if (login.getText().isBlank() || mdp.getText().isBlank()) {
+                afficherErreur("Identifiant et mot de passe obligatoires.");
+                return;
+            }
+            if (!mdp.getText().equals(confirm.getText())) {
+                afficherErreur("Les mots de passe ne correspondent pas.");
+                return;
+            }
+            boolean ok = administrateurDAO.reinitialiserMotDePasse(login.getText().trim(), mdp.getText());
+            if (ok) {
+                afficherErreur(""); // clear
+                new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION,
+                        "Mot de passe mis à jour. Connectez-vous avec vos nouveaux identifiants.")
+                        .showAndWait();
+            } else {
+                afficherErreur("Identifiant introuvable.");
+            }
+        }
+    });
+}
 }

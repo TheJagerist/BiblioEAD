@@ -94,7 +94,7 @@
                 text="SE CONNECTER"/>
 
         <!-- Lien oublié -->
-        <Hyperlink styleClass="login-link" text="Mot de passe oublié ?"/>
+        <Hyperlink styleClass="login-link" text="Mot de passe oublié ?" onAction="#onMotDePasseOublie"/>
 
         <!-- Texte bas -->
         <Label styleClass="login-bottom-text" maxWidth="400" textAlignment="CENTER" wrapText="true"

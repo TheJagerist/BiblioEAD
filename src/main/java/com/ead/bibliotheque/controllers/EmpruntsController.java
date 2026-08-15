@@ -45,6 +45,7 @@ public class EmpruntsController implements Initializable {
     @FXML private TableColumn<Emprunt, String>    colAdherent, colLivre, colJoursRestants;
     @FXML private TableColumn<Emprunt, LocalDate> colDateEmprunt, colDateRetour;
     @FXML private TableColumn<Emprunt, Emprunt.Statut> colStatut;
+    @FXML private TableColumn<Emprunt, String>    colCreePar;
     @FXML private Button btnRetour, btnHistoriqueAdherent, btnNouvelEmprunt;
 
     // ── Tableau Retards ───────────────────────────────────────
@@ -60,6 +61,7 @@ public class EmpruntsController implements Initializable {
     @FXML private TableView<Emprunt>              tableHistorique;
     @FXML private TableColumn<Emprunt, String>    colAdherentH, colLivreH, colStatutH;
     @FXML private TableColumn<Emprunt, LocalDate> colDateEmpruntH, colDateRetourH;
+    @FXML private TableColumn<Emprunt, String>    colCreeParH;
 
     // ── Panneau latéral ──────────────────────────────────────
     @FXML private VBox  panneauFormulaire, contenuEmprunt, contenuFicheRetard;
@@ -108,6 +110,7 @@ public class EmpruntsController implements Initializable {
         colJoursRestants.setCellValueFactory(cd ->
                 new javafx.beans.property.SimpleStringProperty(cd.getValue().getJoursLabel()));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        colCreePar.setCellValueFactory(new PropertyValueFactory<>("creePar"));
         tableEmprunts.setRowFactory(tv -> new TableRow<>() {
             @Override protected void updateItem(Emprunt e, boolean empty) {
                 super.updateItem(e, empty);
@@ -149,6 +152,7 @@ public class EmpruntsController implements Initializable {
         colDateEmpruntH.setCellValueFactory(new PropertyValueFactory<>("dateEmprunt"));
         colDateRetourH.setCellValueFactory(new PropertyValueFactory<>("dateRetourPrevue"));
         colStatutH.setCellValueFactory(new PropertyValueFactory<>("statut"));
+        colCreeParH.setCellValueFactory(new PropertyValueFactory<>("creePar"));
     }
 
     private void configurerCombos() {
@@ -232,7 +236,10 @@ public class EmpruntsController implements Initializable {
     }
 
     private void chargerHistorique() {
-        tousHistorique = FXCollections.observableArrayList(empruntDAO.listerHistorique());
+        List<Emprunt> historique = empruntDAO.listerHistorique();
+        List<Emprunt> enCours = empruntDAO.listerEnCours();
+        historique.addAll(enCours);
+        tousHistorique = FXCollections.observableArrayList(historique);
         tableHistorique.setItems(tousHistorique);
     }
 
@@ -249,13 +256,20 @@ public class EmpruntsController implements Initializable {
     }
 
     // ── Recherche ─────────────────────────────────────────────
+    private boolean contientTermeAdherentEtLivre(Emprunt e, String terme) {
+        if (e == null || terme == null || terme.isBlank()) return true;
+        String recherche = "";
+        if (e.getNomAdherent() != null) recherche += " " + e.getNomAdherent();
+        if (e.getNumCarteAdherent() != null) recherche += " " + e.getNumCarteAdherent();
+        if (e.getTitreLivre() != null) recherche += " " + e.getTitreLivre();
+        return recherche.toLowerCase().contains(terme);
+    }
+
     @FXML
     private void onRecherche() {
         String t = fieldRecherche.getText().toLowerCase().trim();
         tableEmprunts.setItems(t.isEmpty() ? tousEmprunts :
-                tousEmprunts.filtered(e -> e.getNomAdherent().toLowerCase().contains(t)
-                                           || e.getTitreLivre().toLowerCase().contains(t)
-                                           || e.getNumCarteAdherent().toLowerCase().contains(t)));
+                tousEmprunts.filtered(e -> contientTermeAdherentEtLivre(e, t)));
     }
 
     @FXML
@@ -268,8 +282,7 @@ public class EmpruntsController implements Initializable {
     private void onRechercheHisto() {
         String t = fieldRechercheHisto.getText().toLowerCase().trim();
         tableHistorique.setItems(t.isEmpty() ? tousHistorique :
-                tousHistorique.filtered(e -> e.getNomAdherent().toLowerCase().contains(t)
-                                             || e.getTitreLivre().toLowerCase().contains(t)));
+                tousHistorique.filtered(e -> contientTermeAdherentEtLivre(e, t)));
     }
 
     @FXML
@@ -281,9 +294,7 @@ public class EmpruntsController implements Initializable {
 
     private void appliquerFiltreRetards(String terme, String sev) {
         tableRetards.setItems(tousRetards.filtered(e -> {
-            boolean ok = terme.isEmpty()
-                    || e.getNomAdherent().toLowerCase().contains(terme)
-                    || e.getTitreLivre().toLowerCase().contains(terme);
+            boolean ok = terme.isEmpty() || contientTermeAdherentEtLivre(e, terme);
             if (!ok) return false;
             if (sev == null || sev.equals("Tous")) return true;
             long j = ChronoUnit.DAYS.between(e.getDateRetourPrevue(), LocalDate.now());

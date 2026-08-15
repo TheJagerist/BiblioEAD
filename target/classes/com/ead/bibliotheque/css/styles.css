@@ -611,3 +611,65 @@
     -fx-font-size: 12px;
     -fx-text-fill: #9a9a9a;
 }
+
+/* ══ LABEL SUCCÈS ═════════════════════════════════════════════ */
+.label-succes {
+    -fx-text-fill: #2e7d32;
+    -fx-font-size: 12px;
+    -fx-font-family: "PublicSans";
+}
+
+/* ══ AVATAR GRAND (profil admin) ══════════════════════════════ */
+.avatar-grand {
+    -fx-min-width: 64; -fx-pref-width: 64; -fx-max-width: 64;
+    -fx-min-height: 64; -fx-pref-height: 64; -fx-max-height: 64;
+    -fx-background-color: #5BB8D4;
+    -fx-background-radius: 32;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-font-family: "Fraunces";
+    -fx-alignment: center;
+}
+
+/* ══ PARAMETRES TABPANE ═══════════════════════════════════════ */
+.parametres-tabpane > .tab-header-area {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #e0e0e0 transparent;
+    -fx-border-width: 1;
+    -fx-padding: 0 0 0 0;
+}
+
+.parametres-tabpane > .tab-header-area > .tab-header-background {
+    -fx-background-color: white;
+}
+
+.parametres-tabpane > .tab-header-area > .headers-region > .tab {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: transparent;
+    -fx-padding: 10 22 10 22;
+}
+
+.parametres-tabpane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #CC0000;
+}
+
+.parametres-tabpane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-font-family: "PublicSans";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888888;
+}
+
+.parametres-tabpane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-text-fill: #CC0000;
+}
+
+.parametres-tabpane > .tab-content-area {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}

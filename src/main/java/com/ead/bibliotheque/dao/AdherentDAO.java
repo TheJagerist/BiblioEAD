@@ -31,8 +31,9 @@ public class AdherentDAO {
         String sens = ascendant ? "ASC" : "DESC";
 
         // colonneSure vient d'une liste blanche fixe, donc pas d'injection possible ici
-        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription " +
-                "FROM adherents ORDER BY " + colonneSure + " " + sens;
+        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription, " +
+        "cree_par, modifie_par, modifie_le " +
+        "FROM adherents ORDER BY " + colonneSure + " " + sens;
 
         List<Adherent> resultats = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection();
@@ -50,7 +51,8 @@ public class AdherentDAO {
 
     /** Recherche par nom, prénom ou numéro de carte (champ "Rechercher" de la maquette). */
     public List<Adherent> rechercher(String motCle) {
-        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription " +
+        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription, " +
+                     "cree_par, modifie_par, modifie_le " +
                      "FROM adherents " +
                      "WHERE nom ILIKE ? OR prenom ILIKE ? OR num_carte ILIKE ? " +
                      "ORDER BY nom ASC";
@@ -78,7 +80,8 @@ public class AdherentDAO {
 
     /** Filtre par classe (menu "Filtrer par" de la maquette). */
     public List<Adherent> filtrerParClasse(String classe) {
-        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription " +
+        String sql = "SELECT id_adherent, nom, prenom, classe, filiere, num_carte, date_inscription, " +
+                "cree_par, modifie_par, modifie_le " +
                 "FROM adherents WHERE classe = ? ORDER BY nom ASC";
 
         List<Adherent> resultats = new ArrayList<>();
@@ -100,8 +103,8 @@ public class AdherentDAO {
     /** Ajoute un adhérent ; le numéro de carte est généré automatiquement (section 8.2 du CDC). */
     public boolean ajouter(Adherent adherent) {
         String numCarte = genererProchainNumCarte();
-        String sql = "INSERT INTO adherents (nom, prenom, classe, filiere, num_carte, date_inscription) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO adherents (nom, prenom, classe, filiere, num_carte, date_inscription, cree_par, modifie_par, modifie_le) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -113,6 +116,12 @@ public class AdherentDAO {
             stmt.setString(5, numCarte);
             stmt.setDate(6, Date.valueOf(
                     adherent.getDateInscription() != null ? adherent.getDateInscription() : LocalDate.now()));
+
+            String login = com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte() != null
+                    ? com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte().getLogin() : "système";
+            stmt.setString(7, login);
+            stmt.setString(8, login);
+            stmt.setTimestamp(9, java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()));
 
             int lignes = stmt.executeUpdate();
             if (lignes > 0) {
@@ -132,7 +141,7 @@ public class AdherentDAO {
 
     /** Modifie un adhérent existant. */
     public boolean modifier(Adherent adherent) {
-        String sql = "UPDATE adherents SET nom = ?, prenom = ?, classe = ? WHERE id_adherent = ?";
+        String sql = "UPDATE adherents SET nom=?, prenom=?, classe=?, modifie_par=?, modifie_le=? WHERE id_adherent=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -141,6 +150,14 @@ public class AdherentDAO {
             stmt.setString(2, adherent.getPrenom());
             stmt.setString(3, adherent.getClasse());
             stmt.setInt(4, adherent.getIdAdherent());
+            String login = com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte() != null
+        ? com.ead.bibliotheque.util.SessionManager.getAdministrateurConnecte().getLogin() : "système";
+        stmt.setString(1, adherent.getNom());
+        stmt.setString(2, adherent.getPrenom());
+        stmt.setString(3, adherent.getClasse());
+        stmt.setString(4, login);
+        stmt.setTimestamp(5, java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()));
+        stmt.setInt(6, adherent.getIdAdherent());
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -206,8 +223,9 @@ public class AdherentDAO {
         return 0;
     }
 
+
     private Adherent mapResultSet(ResultSet rs) throws SQLException {
-        return new Adherent(
+        Adherent a = new Adherent(
                 rs.getInt("id_adherent"),
                 rs.getString("nom"),
                 rs.getString("prenom"),
@@ -216,5 +234,9 @@ public class AdherentDAO {
                 rs.getString("num_carte"),
                 rs.getDate("date_inscription").toLocalDate()
         );
-    }
+        a.setModifiePar(rs.getString("modifie_par"));
+        java.sql.Timestamp ts = rs.getTimestamp("modifie_le");
+        if (ts != null) a.setModifieLe(ts.toLocalDateTime());
+        return a;
+}
 }

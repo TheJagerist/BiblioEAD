@@ -62,6 +62,8 @@
                 <TableColumn fx:id="colAnnee"  text="Année"  prefWidth="70"/>
                 <TableColumn fx:id="colIsbn"   text="ISBN"   prefWidth="130"/>
                 <TableColumn fx:id="colDispo"  text="Dispo"  prefWidth="80"/>
+                <TableColumn fx:id="colModifiePar" text="Modifié par" prefWidth="120"/>
+                <TableColumn fx:id="colModifieLe"  text="Modifié le"  prefWidth="130"/>
             </columns>
             <placeholder><Label text="Aucun livre trouvé."/></placeholder>
         </TableView>
@@ -72,12 +74,11 @@
             <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
             <Button fx:id="btnModifier"    text="Modifier"              styleClass="bouton-action"        disable="true" onAction="#onModifier"/>
             <Button fx:id="btnSupprimer"   text="Supprimer"             styleClass="bouton-action-danger" disable="true" onAction="#onSupprimer"/>
-            <Button fx:id="btnExemplaires" text="Gérer les exemplaires" styleClass="bouton-action"        disable="true" onAction="#onGererExemplaires"/>
         </HBox>
     </VBox>
 
     <!-- ===== PANNEAU LATÉRAL ===== -->
-    <VBox fx:id="panneauFormulaire" prefWidth="290"
+    <VBox fx:id="panneauFormulaire" prefWidth="500"
           styleClass="panneau-lateral"
           managed="false" visible="false">
 

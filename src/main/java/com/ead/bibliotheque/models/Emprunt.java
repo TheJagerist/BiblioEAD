@@ -23,6 +23,11 @@ public class Emprunt {
     private final ObjectProperty<LocalDate> dateRetourPrevue   = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDate> dateRetourEffectif = new SimpleObjectProperty<>();
     private final ObjectProperty<Statut>    statut             = new SimpleObjectProperty<>();
+    private final StringProperty creePar = new SimpleStringProperty();
+
+    public String getCreePar() { return creePar.get(); }
+    public void setCreePar(String v) { creePar.set(v); }
+    public StringProperty creeParProperty() { return creePar; }
 
     public Emprunt() {}
 
