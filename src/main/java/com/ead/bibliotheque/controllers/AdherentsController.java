@@ -1,9 +1,13 @@
 package com.ead.bibliotheque.controllers;
 
+import com.ead.bibliotheque.util.ChargementUtil;
+import javafx.concurrent.Task;
+import javafx.scene.layout.StackPane;
 import com.ead.bibliotheque.dao.AdherentDAO;
 import com.ead.bibliotheque.dao.EmpruntDAO;
 import com.ead.bibliotheque.models.Adherent;
 import com.ead.bibliotheque.models.Emprunt;
+import com.ead.bibliotheque.util.RechercheUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -144,10 +148,10 @@ public class AdherentsController implements Initializable {
         String filiere = comboFiliere.getValue();
 
         List<Adherent> filtre = tousLesAdherents.stream()
-                .filter(a -> terme.isEmpty()
-                        || a.getNom().toLowerCase().contains(terme)
-                        || a.getPrenom().toLowerCase().contains(terme)
-                        || a.getNumCarte().toLowerCase().contains(terme))
+                .filter(a -> RechercheUtil.contient(terme,
+                        a.getNom(), a.getPrenom(), a.getClasse(), a.getFiliere(),
+                        a.getNumCarte(), a.getModifiePar(),
+                        a.getDateInscription(), a.getModifieLe()))
                 .filter(a -> filiere == null || filiere.isEmpty() || a.getFiliere().equals(filiere))
                 .toList();
 
@@ -184,11 +188,12 @@ public class AdherentsController implements Initializable {
     }
 
     // ── Supprimer ─────────────────────────────────────────────
-    @FXML
+   @FXML
     private void onSupprimer() {
         Adherent sel = tableAdherents.getSelectionModel().getSelectedItem();
         if (sel == null) return;
-        if (new com.ead.bibliotheque.dao.EmpruntDAO().compterEmpruntsActifs(sel.getIdAdherent()) > 0) {
+
+        if (new EmpruntDAO().compterEmpruntsActifs(sel.getIdAdherent()) > 0) {
             new Alert(Alert.AlertType.WARNING,
                     "Impossible de supprimer " + sel.getNom() + " : il a des emprunts en cours ou en retard.")
                     .showAndWait();
@@ -200,13 +205,38 @@ public class AdherentsController implements Initializable {
                 ButtonType.YES, ButtonType.NO);
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(r -> {
-            if (r == ButtonType.YES) {
-                dao.supprimer(sel.getIdAdherent());
+            if (r != ButtonType.YES) return;
+
+            StackPane overlay = ChargementUtil.creerOverlay();
+            javafx.scene.layout.HBox racine = (javafx.scene.layout.HBox) panneauFormulaire.getParent();
+            racine.getChildren().add(overlay);
+            ChargementUtil.afficher(overlay);
+            btnSupprimer.setDisable(true);
+
+            Task<Void> tache = new Task<>() {
+                @Override
+                protected Void call() {
+                    dao.supprimer(sel.getIdAdherent());
+                    return null;
+                }
+            };
+
+            tache.setOnSucceeded(e -> {
+                racine.getChildren().remove(overlay);
+                btnSupprimer.setDisable(false);
                 chargerAdherents();
                 btnModifier.setDisable(true);
                 btnSupprimer.setDisable(true);
                 btnHistorique.setDisable(true);
-            }
+            });
+
+            tache.setOnFailed(e -> {
+                racine.getChildren().remove(overlay);
+                btnSupprimer.setDisable(false);
+                new Alert(Alert.AlertType.ERROR, "Erreur lors de la suppression.").showAndWait();
+            });
+
+            new Thread(tache).start();
         });
     }
 
@@ -262,34 +292,59 @@ public class AdherentsController implements Initializable {
 
     // ── Sauvegarder (ajout ou modif) ─────────────────────────
     @FXML
-    private void onSauvegarder() {
-        if (!validerFormulaire()) return;
+private void onSauvegarder() {
+    if (!validerFormulaire()) return;
 
-        if (adherentEnCours == null) {
-            // Ajout
-            Adherent nouveau = new Adherent(
-                    0,
-                    fieldNom.getText().trim().toUpperCase(),
-                    fieldPrenom.getText().trim(),
-                    getClasseGeneree(),
-                    comboFiliereForm.getValue(),
-                    labelNumCarte.getText(),
-                    dateInscription.getValue()
-            );
-            dao.ajouter(nouveau);
-        } else {
-            // Modification
-            adherentEnCours.setNom(fieldNom.getText().trim().toUpperCase());
-            adherentEnCours.setPrenom(fieldPrenom.getText().trim());
-            adherentEnCours.setClasse(getClasseGeneree());
-            adherentEnCours.setFiliere(comboFiliereForm.getValue());
-            adherentEnCours.setDateInscription(dateInscription.getValue());
-            dao.modifier(adherentEnCours);
+    // Snapshot des valeurs du formulaire avant de passer au thread BDD
+    final String nom    = fieldNom.getText().trim().toUpperCase();
+    final String prenom = fieldPrenom.getText().trim();
+    final String classe = getClasseGeneree();
+    final String filiere = comboFiliereForm.getValue();
+    final java.time.LocalDate dateInscr = dateInscription.getValue();
+    final String numCarte = labelNumCarte.getText();
+
+    // Overlay sur le panneau latéral uniquement
+    StackPane overlay = ChargementUtil.creerOverlay();
+    // On récupère le parent du panneau (le HBox racine) pour y superposer le spinner
+    javafx.scene.layout.HBox racine = (javafx.scene.layout.HBox) panneauFormulaire.getParent();
+    racine.getChildren().add(overlay);
+    ChargementUtil.afficher(overlay);
+    btnSauvegarder.setDisable(true);
+
+    final Adherent cible = adherentEnCours;
+    Task<Void> tache = new Task<>() {
+        @Override
+        protected Void call() {
+            if (cible == null) {
+                Adherent nouveau = new Adherent(0, nom, prenom, classe, filiere, numCarte, dateInscr);
+                dao.ajouter(nouveau);
+            } else {
+                cible.setNom(nom);
+                cible.setPrenom(prenom);
+                cible.setClasse(classe);
+                cible.setFiliere(filiere);
+                cible.setDateInscription(dateInscr);
+                dao.modifier(cible);
+            }
+            return null;
         }
+    };
 
+    tache.setOnSucceeded(e -> {
+        racine.getChildren().remove(overlay);
+        btnSauvegarder.setDisable(false);
         chargerAdherents();
         fermerPanneau();
-    }
+    });
+
+    tache.setOnFailed(e -> {
+        racine.getChildren().remove(overlay);
+        btnSauvegarder.setDisable(false);
+        afficherErreur(true, "Erreur lors de l'enregistrement.");
+    });
+
+    new Thread(tache).start();
+}
     private String getClasseGeneree() {
         return labelClasseAuto.getText().equals("— auto —") ? "" : labelClasseAuto.getText();
     }

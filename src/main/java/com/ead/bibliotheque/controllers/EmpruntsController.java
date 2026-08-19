@@ -1,5 +1,7 @@
 package com.ead.bibliotheque.controllers;
 
+import com.ead.bibliotheque.util.ChargementUtil;
+import javafx.concurrent.Task;
 import com.ead.bibliotheque.dao.AdherentDAO;
 import com.ead.bibliotheque.dao.EmpruntDAO;
 import com.ead.bibliotheque.dao.LivreDAO;
@@ -7,6 +9,7 @@ import com.ead.bibliotheque.dao.RetardDAO;
 import com.ead.bibliotheque.models.Adherent;
 import com.ead.bibliotheque.models.Emprunt;
 import com.ead.bibliotheque.models.Livre;
+import com.ead.bibliotheque.util.RechercheUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
@@ -119,6 +123,10 @@ public class EmpruntsController implements Initializable {
             }
         });
     }
+
+    private StackPane getContenuPrincipal() {
+    return (StackPane) panneauFormulaire.getScene().lookup("#contenuPrincipal");
+}
 
     private void configurerColonnesRetards() {
         colAdherentR.setCellValueFactory(new PropertyValueFactory<>("nomAdherent"));
@@ -258,11 +266,13 @@ public class EmpruntsController implements Initializable {
     // ── Recherche ─────────────────────────────────────────────
     private boolean contientTermeAdherentEtLivre(Emprunt e, String terme) {
         if (e == null || terme == null || terme.isBlank()) return true;
-        String recherche = "";
-        if (e.getNomAdherent() != null) recherche += " " + e.getNomAdherent();
-        if (e.getNumCarteAdherent() != null) recherche += " " + e.getNumCarteAdherent();
-        if (e.getTitreLivre() != null) recherche += " " + e.getTitreLivre();
-        return recherche.toLowerCase().contains(terme);
+        long joursRetard = e.getDateRetourPrevue() != null
+                ? ChronoUnit.DAYS.between(e.getDateRetourPrevue(), LocalDate.now()) : 0;
+        String severite = joursRetard >= 14 ? "Critique" : joursRetard >= 7 ? "Élevé" : "Modéré";
+        return RechercheUtil.contient(terme,
+                e.getNomAdherent(), e.getNumCarteAdherent(), e.getTitreLivre(),
+                e.getCreePar(), e.getJoursLabel(), severite, e.getStatut(),
+                e.getDateEmprunt(), e.getDateRetourPrevue(), e.getDateRetourEffectif());
     }
 
     @FXML
@@ -341,23 +351,48 @@ public class EmpruntsController implements Initializable {
 
     // ── Actions ───────────────────────────────────────────────
     @FXML
-    private void onEnregistrerRetour() {
-        Emprunt sel = tabPane.getSelectionModel().getSelectedItem() == tabRetards
-                ? tableRetards.getSelectionModel().getSelectedItem()
-                : tableEmprunts.getSelectionModel().getSelectedItem();
-        if (sel == null) return;
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Confirmer le retour de « " + sel.getTitreLivre() + " » ?",
-                ButtonType.YES, ButtonType.NO);
-        confirm.setHeaderText(null);
-        confirm.showAndWait().ifPresent(r -> {
-            if (r == ButtonType.YES) {
-                empruntDAO.enregistrerRetour(sel.getIdEmprunt(), sel.getIdLivre());
-                fermerPanneau();
-                onTabChange();
+private void onEnregistrerRetour() {
+    Emprunt sel = tabPane.getSelectionModel().getSelectedItem() == tabRetards
+            ? tableRetards.getSelectionModel().getSelectedItem()
+            : tableEmprunts.getSelectionModel().getSelectedItem();
+    if (sel == null) return;
+
+    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            "Confirmer le retour de « " + sel.getTitreLivre() + " » ?",
+            ButtonType.YES, ButtonType.NO);
+    confirm.setHeaderText(null);
+    confirm.showAndWait().ifPresent(r -> {
+        if (r != ButtonType.YES) return;
+
+        final int idEmprunt = sel.getIdEmprunt();
+        final int idLivre   = sel.getIdLivre();
+
+        StackPane root = getContenuPrincipal();
+        StackPane overlay = ChargementUtil.creerOverlay();
+        root.getChildren().add(overlay);
+        ChargementUtil.afficher(overlay);
+
+        Task<Boolean> tache = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return empruntDAO.enregistrerRetour(idEmprunt, idLivre);
             }
+        };
+
+        tache.setOnSucceeded(e -> {
+            root.getChildren().remove(overlay);
+            fermerPanneau();
+            onTabChange();
         });
-    }
+
+        tache.setOnFailed(e -> {
+            root.getChildren().remove(overlay);
+            new Alert(Alert.AlertType.ERROR, "Erreur lors du retour.").showAndWait();
+        });
+
+        new Thread(tache).start();
+    });
+}
 
     @FXML
     private void onRelancer() {
@@ -448,18 +483,50 @@ public class EmpruntsController implements Initializable {
 
     // ── Confirmer emprunt ─────────────────────────────────────
     @FXML
-    private void onConfirmerEmprunt() {
-        Adherent a = comboAdherent.getValue();
-        Livre    l = comboLivre.getValue();
-        if (a == null) { afficherErreur(true, "Sélectionnez un adhérent."); return; }
-        if (l == null) { afficherErreur(true, "Sélectionnez un livre.");    return; }
-        if (empruntDAO.compterEmpruntsActifs(a.getIdAdherent()) >= QUOTA_MAX) { afficherErreur(true, "Quota atteint (RG-03)."); return; }
-        if (empruntDAO.aUnRetard(a.getIdAdherent())) { afficherErreur(true, "Adhérent en retard — emprunt refusé."); return; }
-        if (empruntDAO.getExemplairesDisponibles(l.getIdLivre()) <= 0) { afficherErreur(true, "Aucun exemplaire disponible (RG-01)."); return; }
-        if (empruntDAO.enregistrerEmprunt(a.getIdAdherent(), l.getIdLivre())) {
-            fermerPanneau(); chargerEnCours();
-        } else afficherErreur(true, "Erreur lors de l'enregistrement.");
-    }
+private void onConfirmerEmprunt() {
+    Adherent a = comboAdherent.getValue();
+    Livre    l = comboLivre.getValue();
+    if (a == null) { afficherErreur(true, "Sélectionnez un adhérent."); return; }
+    if (l == null) { afficherErreur(true, "Sélectionnez un livre.");    return; }
+    if (empruntDAO.compterEmpruntsActifs(a.getIdAdherent()) >= QUOTA_MAX) { afficherErreur(true, "Quota atteint (RG-03)."); return; }
+    if (empruntDAO.aUnRetard(a.getIdAdherent())) { afficherErreur(true, "Adhérent en retard — emprunt refusé."); return; }
+    if (empruntDAO.getExemplairesDisponibles(l.getIdLivre()) <= 0) { afficherErreur(true, "Aucun exemplaire disponible (RG-01)."); return; }
+
+    final int idAdherent = a.getIdAdherent();
+    final int idLivre    = l.getIdLivre();
+
+    StackPane root = getContenuPrincipal();
+    StackPane overlay = ChargementUtil.creerOverlay();
+    root.getChildren().add(overlay);
+    ChargementUtil.afficher(overlay);
+    btnConfirmer.setDisable(true);
+
+    Task<Boolean> tache = new Task<>() {
+        @Override
+        protected Boolean call() {
+            return empruntDAO.enregistrerEmprunt(idAdherent, idLivre);
+        }
+    };
+
+    tache.setOnSucceeded(e -> {
+        root.getChildren().remove(overlay);
+        btnConfirmer.setDisable(false);
+        if (tache.getValue()) {
+            fermerPanneau();
+            chargerEnCours();
+        } else {
+            afficherErreur(true, "Erreur lors de l'enregistrement.");
+        }
+    });
+
+    tache.setOnFailed(e -> {
+        root.getChildren().remove(overlay);
+        btnConfirmer.setDisable(false);
+        afficherErreur(true, "Erreur lors de l'enregistrement.");
+    });
+
+    new Thread(tache).start();
+}
 
     // ── Helpers ───────────────────────────────────────────────
     private void afficherBloc(VBox b)  { b.setVisible(true);  b.setManaged(true); }

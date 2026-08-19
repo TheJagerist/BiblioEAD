@@ -16,7 +16,7 @@
 
         <HBox spacing="10" alignment="CENTER_LEFT">
             <TextField fx:id="fieldRecherche"
-                       promptText="Rechercher par nom, prénom, n° carte..."
+                       promptText="Nom, prénom, classe, filière, n° carte, date..."
                        styleClass="champ-recherche"
                        HBox.hgrow="ALWAYS"
                        onKeyReleased="#onRecherche"/>
@@ -53,7 +53,7 @@
     </VBox>
 
     <!-- ===== PANNEAU LATÉRAL ===== -->
-    <VBox fx:id="panneauFormulaire" prefWidth="500"
+    <VBox fx:id="panneauFormulaire" prefWidth="500" maxHeight="Infinity"
           styleClass="panneau-lateral"
           managed="false" visible="false">
 
@@ -64,7 +64,8 @@
             <Button text="✕" styleClass="bouton-action" onAction="#onFermerPanneau"/>
         </HBox>
 
-        <VBox spacing="12" VBox.vgrow="ALWAYS">
+        <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;">
+        <VBox spacing="12">
             <padding><Insets top="14" right="16" bottom="14" left="16"/></padding>
 
             <VBox spacing="4">
@@ -109,13 +110,14 @@
             </VBox>
 
             <Label fx:id="labelErreur" styleClass="label-erreur"
-                   text="" wrapText="true" maxWidth="218"
+                   text="" wrapText="true" maxWidth="Infinity"
                    visible="false" managed="false"/>
         </VBox>
+        </ScrollPane>
 
         <HBox spacing="8" styleClass="panneau-lateral-footer">
             <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
-            <Button text="Annuler" styleClass="bouton-action"
+            <Button text="Annuler" styleClass="bouton-action" minWidth="90"
                     onAction="#onFermerPanneau"/>
             <Button fx:id="btnSauvegarder" text="Enregistrer"
                     styleClass="bouton-principal" onAction="#onSauvegarder"

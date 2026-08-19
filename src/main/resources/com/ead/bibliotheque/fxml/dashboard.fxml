@@ -3,166 +3,117 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-            style="-fx-background-color: transparent; -fx-background: transparent;"
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ead.bibliotheque.controllers.DashboardController"
-            styleClass="fond-application"
+            styleClass="dashboard-scroll"
             stylesheets="@../css/styles.css">
-            
-
-    <VBox spacing="20" style="-fx-background-color: transparent;">
-        <padding><Insets top="24" right="28" bottom="24" left="28"/></padding>
-
-        <!-- EN-TÊTE -->
-        <VBox spacing="2" styleClass="entete-dashboard">
-            <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
-            <Label text="Tableau de bord" styleClass="page-titre"/>
-            <Label text="Vue d'ensemble — mise à jour aujourd'hui" styleClass="page-sous-titre"/>
-        </VBox>
-
-        <!-- LIGNE HERO : emprunts en cours + retards -->
-        <HBox spacing="14">
-
-            <VBox styleClass="carte-dos-livre,carte-dos-livre-bleu" spacing="8" HBox.hgrow="ALWAYS">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Emprunts en cours" styleClass="carte-label" HBox.hgrow="ALWAYS"/>
-                    <Label text="→" styleClass="carte-icone-bleu"/>
-                </HBox>
-                <Label fx:id="kpiEmprunts" text="—" styleClass="carte-val"/>
-                <HBox styleClass="spark" spacing="3">
-                    <Region styleClass="spark-barre" prefHeight="10" HBox.hgrow="ALWAYS"/>
-                    <Region styleClass="spark-barre" prefHeight="14" HBox.hgrow="ALWAYS"/>
-                    <Region styleClass="spark-barre" prefHeight="18" HBox.hgrow="ALWAYS"/>
-                    <Region styleClass="spark-barre" prefHeight="15" HBox.hgrow="ALWAYS"/>
-                    <Region styleClass="spark-barre" prefHeight="20" HBox.hgrow="ALWAYS"/>
-                    <Region styleClass="spark-barre" prefHeight="24" HBox.hgrow="ALWAYS"/>
-                </HBox>
-                <Label text="7 derniers jours" styleClass="carte-pied"/>
+    <VBox spacing="18" styleClass="dashboard-root">
+        <padding><Insets top="26" right="28" bottom="28" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" styleClass="dashboard-intro">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Bonjour, admin" styleClass="dashboard-greeting"/>
+                <Label text="Un aperçu vivant de votre bibliothèque, mis à jour aujourd’hui." styleClass="dashboard-subtitle"/>
             </VBox>
-
-            <VBox styleClass="carte-dos-livre,carte-dos-livre-rouge" spacing="8" prefWidth="230">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Retards actifs" styleClass="carte-label" HBox.hgrow="ALWAYS"/>
-                    <Label text="⚠" styleClass="carte-icone-rouge"/>
-                </HBox>
-                <Label fx:id="kpiRetards" text="—" styleClass="carte-val,carte-val-rouge"/>
-                <Label text="Plus ancien : 21 j" styleClass="badge-danger"/>
-            </VBox>
-
+            <Label text="✦  Espace administrateur" styleClass="dashboard-status"/>
         </HBox>
-
-        <!-- LIGNE SECONDAIRE : 3 cartes plates -->
-        <HBox spacing="14">
-
-            <VBox styleClass="carte-plate" spacing="8" HBox.hgrow="ALWAYS">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <Label text="Adhérents actifs" styleClass="carte-label"/>
-                <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label fx:id="kpiAdherents" text="—" styleClass="carte-val-moyen"/>
-                    <HBox spacing="0">
-                        <Label text="EN" styleClass="avatar-mini"/>
-                        <Label text="LM" styleClass="avatar-mini">
-                            <HBox.margin><Insets left="-8"/></HBox.margin>
-                        </Label>
-                        <Label text="DM" styleClass="avatar-mini">
-                            <HBox.margin><Insets left="-8"/></HBox.margin>
-                        </Label>
+        <HBox spacing="18">
+            <VBox spacing="14" styleClass="hero-bibliotheque" HBox.hgrow="ALWAYS" minHeight="236">
+                <HBox alignment="CENTER_LEFT"><Label text="✦  À la une" styleClass="hero-pill" HBox.hgrow="ALWAYS"/><Label text="📚" styleClass="hero-bookmark"/></HBox>
+                <VBox spacing="5" VBox.vgrow="ALWAYS">
+                    <Label text="Votre bibliothèque&#10;à portée de main." styleClass="hero-title"/>
+                    <Label text="Suivez les emprunts, repérez les retards et gardez votre collection disponible pour chaque lecteur." styleClass="hero-copy" wrapText="true" maxWidth="470"/>
+                </VBox>
+                <HBox alignment="CENTER_LEFT" spacing="12"><Label text="Emprunts en cours" styleClass="hero-metric-label"/><Label fx:id="kpiEmprunts" text="—" styleClass="hero-metric-value"/><Label text="en circulation" styleClass="hero-metric-note"/></HBox>
+            </VBox>
+            <VBox spacing="10" prefWidth="275">
+                <VBox styleClass="mini-kpi mini-kpi-alert"
+                      style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #D0021B 0%, #9E0015 100%); -fx-background-radius: 19;"
+                      spacing="4">
+                    <padding><Insets top="18" right="18" bottom="16" left="18"/></padding>
+                    <Label text="RETARDS À TRAITER" styleClass="mini-kpi-label"/>
+                    <HBox alignment="BASELINE_LEFT" spacing="8">
+                        <Label fx:id="kpiRetards" text="—" styleClass="mini-kpi-value"/>
+                        <Label text="emprunts" styleClass="mini-kpi-note"/>
                     </HBox>
-                </HBox>
+                    <Label text="À relancer dès aujourd’hui" styleClass="mini-kpi-foot"/>
+                </VBox>
+                <VBox styleClass="mini-kpi"
+                      style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #018ABE 0%, #001B48 100%); -fx-background-radius: 19;"
+                      spacing="4">
+                    <padding><Insets top="18" right="18" bottom="16" left="18"/></padding>
+                    <Label text="LECTEURS INSCRITS" styleClass="mini-kpi-label"/>
+                    <HBox alignment="BASELINE_LEFT" spacing="8">
+                        <Label fx:id="kpiAdherents" text="—" styleClass="mini-kpi-value"/>
+                        <Label text="adhérents actifs" styleClass="mini-kpi-note"/>
+                    </HBox>
+                </VBox>
             </VBox>
-
-            <VBox styleClass="carte-plate" spacing="8" HBox.hgrow="ALWAYS">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <Label text="Livres disponibles" styleClass="carte-label"/>
-                <HBox alignment="BASELINE_LEFT" spacing="4">
-                    <Label fx:id="kpiLivres" text="—" styleClass="carte-val-moyen"/>
-                    <Label fx:id="labelLivresTotal" text="/ —" styleClass="carte-val-suffixe"/>
-                </HBox>
-                <StackPane alignment="CENTER_LEFT" styleClass="barre-progression">
-                    <Region fx:id="fondBarreLivres" styleClass="barre-progression-fond" maxWidth="Infinity" prefHeight="4"/>
-                    <Region fx:id="barreProgressionLivres" styleClass="barre-progression-remplissage" prefWidth="160" maxWidth="160" prefHeight="4"/>
-                </StackPane>
-            </VBox>
-
-            <VBox styleClass="carte-plate" spacing="6" HBox.hgrow="ALWAYS">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <Label text="Ce mois" styleClass="carte-label"/>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Nouveaux emprunts" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="statNouveauxEmprunts" text="—" styleClass="stat-val"/>
-                </HBox>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Retours effectués" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="statRetoursEffectues" text="—" styleClass="stat-val"/>
-                </HBox>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Nouveaux adhérents" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="statNouveauxAdherents" text="—" styleClass="stat-val"/>
-                </HBox>
-            </VBox>
-
         </HBox>
-
-        <!-- LIGNE BASSE : timeline + genres -->
-        <HBox spacing="14">
-
-            <VBox styleClass="carte-timeline" spacing="14" HBox.hgrow="ALWAYS">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <HBox alignment="CENTER_LEFT">
-                    <Label text="Activité récente" styleClass="section-label" HBox.hgrow="ALWAYS"/>
-                    <Label text="Voir tout →" styleClass="lien-voir-tout"/>
+        <HBox spacing="18">
+            <VBox spacing="14" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT"><Label text="Vue d’ensemble" styleClass="section-title" HBox.hgrow="ALWAYS"/><Label text="Données actuelles" styleClass="section-link"/></HBox>
+                <HBox spacing="14">
+                    <VBox styleClass="stat-card stat-card-rose"
+                          style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #018ABE 0%, #001B48 100%); -fx-background-radius: 20;"
+                          spacing="8" HBox.hgrow="ALWAYS">
+                        <padding><Insets top="20" right="20" bottom="18" left="20"/></padding>
+                        <Label text="LIVRES DISPONIBLES" styleClass="stat-card-label"/>
+                        <HBox alignment="BASELINE_LEFT" spacing="5">
+                            <Label fx:id="kpiLivres" text="—" styleClass="stat-card-value"/>
+                            <Label fx:id="labelLivresTotal" text="/ —" styleClass="stat-card-suffix"/>
+                        </HBox>
+                        <StackPane alignment="CENTER_LEFT" styleClass="barre-progression">
+                            <Region fx:id="fondBarreLivres" styleClass="barre-progression-fond" maxWidth="Infinity" prefHeight="5"/>
+                            <Region fx:id="barreProgressionLivres" styleClass="barre-progression-remplissage" prefWidth="160" maxWidth="160" prefHeight="5"/>
+                        </StackPane>
+                        <Label text="Exemplaires prêts à être empruntés" styleClass="stat-card-foot"/>
+                    </VBox>
+                    <VBox styleClass="stat-card stat-card-cream"
+                          style="-fx-background-color: #FFFFFF; -fx-background-radius: 20; -fx-border-color: #E5EDF2; -fx-border-width: 1; -fx-border-radius: 20;"
+                          spacing="7" HBox.hgrow="ALWAYS">
+                        <padding><Insets top="20" right="20" bottom="18" left="20"/></padding>
+                        <Label text="CE MOIS-CI" styleClass="stat-card-label stat-card-label-dark"/>
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Nouveaux emprunts" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="statNouveauxEmprunts" text="—" styleClass="stat-val"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Retours effectués" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="statRetoursEffectues" text="—" styleClass="stat-val"/>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Nouveaux adhérents" styleClass="stat-label" HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="statNouveauxAdherents" text="—" styleClass="stat-val"/>
+                        </HBox>
+                    </VBox>
                 </HBox>
-
-                <VBox fx:id="conteneurTimeline" spacing="0"/>
-
+                <VBox styleClass="activity-card" spacing="14" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT"><Label text="Activité récente" styleClass="section-title" HBox.hgrow="ALWAYS"/><Label text="Mise à jour automatique" styleClass="section-link"/></HBox>
+                    <VBox fx:id="conteneurTimeline" spacing="0"/>
+                </VBox>
             </VBox>
-
-            <VBox styleClass="carte-genres" spacing="12" prefWidth="230">
-                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
-                <Label text="Genres empruntés" styleClass="section-label"/>
-
-                <VBox spacing="5">
-                    <HBox>
-                        <Label fx:id="genreNom1" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="genrePct1" text="—%" styleClass="genre-pourcentage"/>
-                    </HBox>
-                    <StackPane alignment="CENTER_LEFT">
-                        <Region styleClass="barre-genre-fond,barre-genre-fond-rouge" maxWidth="Infinity" prefHeight="8"/>
-                        <Region fx:id="barreGenre1" styleClass="barre-genre-remplissage-rouge" prefWidth="0" maxWidth="160" prefHeight="8"/>
-                    </StackPane>
+            <VBox prefWidth="285" spacing="14">
+                <Label text="Emprunts par genre" styleClass="section-title"/>
+                <VBox styleClass="genres-card" spacing="16">
+                    <VBox spacing="6">
+                        <HBox><Label fx:id="genreNom1" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/><Label fx:id="genrePct1" text="—%" styleClass="genre-pourcentage"/></HBox>
+                        <StackPane alignment="CENTER_LEFT"><Region styleClass="barre-genre-fond" maxWidth="Infinity" prefHeight="8"/><Region fx:id="barreGenre1" styleClass="barre-genre-remplissage-rouge" prefWidth="0" maxWidth="160" prefHeight="8"/></StackPane>
+                    </VBox>
+                    <VBox spacing="6">
+                        <HBox><Label fx:id="genreNom2" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/><Label fx:id="genrePct2" text="—%" styleClass="genre-pourcentage"/></HBox>
+                        <StackPane alignment="CENTER_LEFT"><Region styleClass="barre-genre-fond" maxWidth="Infinity" prefHeight="8"/><Region fx:id="barreGenre2" styleClass="barre-genre-remplissage-bleu" prefWidth="0" maxWidth="160" prefHeight="8"/></StackPane>
+                    </VBox>
+                    <VBox spacing="6">
+                        <HBox><Label fx:id="genreNom3" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/><Label fx:id="genrePct3" text="—%" styleClass="genre-pourcentage"/></HBox>
+                        <StackPane alignment="CENTER_LEFT"><Region styleClass="barre-genre-fond" maxWidth="Infinity" prefHeight="8"/><Region fx:id="barreGenre3" styleClass="barre-genre-remplissage-gris" prefWidth="0" maxWidth="160" prefHeight="8"/></StackPane>
+                    </VBox>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Label text="Répartition basée sur vos emprunts enregistrés." wrapText="true" styleClass="genres-note"/>
                 </VBox>
-
-                <VBox spacing="5">
-                    <HBox>
-                        <Label fx:id="genreNom2" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="genrePct2" text="—%" styleClass="genre-pourcentage"/>
-                    </HBox>
-                    <StackPane alignment="CENTER_LEFT">
-                        <Region styleClass="barre-genre-fond,barre-genre-fond-bleu" maxWidth="Infinity" prefHeight="8"/>
-                        <Region fx:id="barreGenre2" styleClass="barre-genre-remplissage-bleu" prefWidth="0" maxWidth="160" prefHeight="8"/>
-                    </StackPane>
-                </VBox>
-
-                <VBox spacing="5">
-                    <HBox>
-                        <Label fx:id="genreNom3" text="—" styleClass="genre-nom" HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="genrePct3" text="—%" styleClass="genre-pourcentage"/>
-                    </HBox>
-                    <StackPane alignment="CENTER_LEFT">
-                        <Region styleClass="barre-genre-fond,barre-genre-fond-gris" maxWidth="Infinity" prefHeight="8"/>
-                        <Region fx:id="barreGenre3" styleClass="barre-genre-remplissage-gris" prefWidth="0" maxWidth="160" prefHeight="8"/>
-                    </StackPane>
-                </VBox>
-
             </VBox>
-
         </HBox>
-
     </VBox>
 </ScrollPane>

@@ -23,10 +23,12 @@
             <placeholder><Label text="Aucun administrateur."/></placeholder>
         </TableView>
 
-        <HBox spacing="8">
+                <HBox spacing="8">
             <Button fx:id="btnAjouter" text="Créer" styleClass="bouton-principal" onAction="#onAjouter"/>
             <Button fx:id="btnSupprimer" text="Supprimer" styleClass="bouton-action-danger"
                     disable="true" onAction="#onSupprimer"/>
+            <Button fx:id="btnReinitialiserMdp" text="Réinitialiser le mot de passe" styleClass="bouton-action"
+                    disable="true" onAction="#onReinitialiserMdp"/>
         </HBox>
     </VBox>
 

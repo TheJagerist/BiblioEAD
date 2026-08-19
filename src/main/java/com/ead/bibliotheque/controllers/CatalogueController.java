@@ -1,7 +1,10 @@
 package com.ead.bibliotheque.controllers;
 
+import com.ead.bibliotheque.util.ChargementUtil;
+import javafx.concurrent.Task;
 import com.ead.bibliotheque.dao.LivreDAO;
 import com.ead.bibliotheque.models.Livre;
+import com.ead.bibliotheque.util.RechercheUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,6 +48,7 @@ public class CatalogueController implements Initializable {
     // ── Boutons ──────────────────────────────────────────────
     @FXML private Button btnModifier;
     @FXML private Button btnSupprimer;
+    @FXML private Button btnSauvegarder;
 
     // ── Panneau latéral ──────────────────────────────────────
     @FXML private VBox panneauFormulaire;
@@ -153,7 +157,8 @@ private void afficherToutesNouveautes() {
         String couleur = couleurs[Math.abs(l.getTitre().hashCode()) % couleurs.length];
 
         StackPane cover = new StackPane();
-        cover.setPrefSize(90, 124);
+        cover.setPrefSize(90, 126);
+        cover.setMinSize(90, 126);
         cover.setStyle("-fx-background-color:" + couleur + "; -fx-background-radius:6;");
 
         // Image de couverture si disponible
@@ -161,8 +166,8 @@ private void afficherToutesNouveautes() {
         if (imgPath != null && !imgPath.isBlank()) {
             try {
                 String url = imgPath.startsWith("http") ? imgPath : new java.io.File(imgPath).toURI().toString();
-                ImageView iv = new ImageView(new Image(url, 90, 124, false, true, true));
-                iv.setFitWidth(90); iv.setFitHeight(124);
+                ImageView iv = new ImageView(new Image(url, 90, 126, false, true, true));
+                iv.setFitWidth(90); iv.setFitHeight(126);
                 iv.setPreserveRatio(false);
                 
                 cover.getChildren().add(iv);
@@ -180,14 +185,15 @@ private void afficherToutesNouveautes() {
 
         // Infos sous la couverture
         Label titre = new Label(l.getTitre());
-        titre.setPrefWidth(90); titre.setWrapText(true);
+        titre.setPrefWidth(100); titre.setWrapText(true);
+        titre.setMaxHeight(32);
         titre.setStyle("-fx-font-size:10px; -fx-font-weight:bold; -fx-text-fill:#1a1a1a;");
 
         Label auteur = new Label(l.getAuteur());
         auteur.setStyle("-fx-font-size:9px; -fx-text-fill:#888888;");
 
-        VBox carte = new VBox(5, cover, titre, auteur);
-        carte.setPrefWidth(90);
+        VBox carte = new VBox(4, cover, titre, auteur);
+        carte.setPrefWidth(100);
         carte.setOnMouseClicked(e -> {
     tableCatalogue.getSelectionModel().select(l);
     tableCatalogue.scrollTo(l);
@@ -223,10 +229,10 @@ private void afficherToutesNouveautes() {
         boolean dispo = checkDispo.isSelected();
 
         List<Livre> filtre = tousLesLivres.stream()
-                .filter(l -> terme.isEmpty()
-                        || l.getTitre().toLowerCase().contains(terme)
-                        || l.getAuteur().toLowerCase().contains(terme)
-                        || (l.getIsbn() != null && l.getIsbn().contains(terme)))
+                .filter(l -> RechercheUtil.contient(terme,
+                        l.getTitre(), l.getAuteur(), l.getGenre(), l.getIsbn(),
+                        l.getDispoLabel(), l.getModifiePar(),
+                        l.getAnnee(), l.getDateAjout(), l.getModifieLe()))
                 .filter(l -> genre == null || genre.isEmpty() || l.getGenre().equals(genre))
                 .filter(l -> !dispo || l.getExemplairesDisponibles() > 0)
                 .toList();
@@ -266,55 +272,101 @@ private void afficherToutesNouveautes() {
     private void onSupprimer() {
         Livre sel = tableCatalogue.getSelectionModel().getSelectedItem();
         if (sel == null) return;
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Supprimer « " + sel.getTitre() + " » et tous ses exemplaires ?",
                 ButtonType.YES, ButtonType.NO);
         confirm.setHeaderText(null);
         confirm.showAndWait().ifPresent(r -> {
-            if (r == ButtonType.YES) {
-                dao.supprimer(sel.getIdLivre());
+            if (r != ButtonType.YES) return;
+
+            StackPane overlay = ChargementUtil.creerOverlay();
+            javafx.scene.layout.HBox racine = (javafx.scene.layout.HBox) panneauFormulaire.getParent();
+            racine.getChildren().add(overlay);
+            ChargementUtil.afficher(overlay);
+            btnSupprimer.setDisable(true);
+
+            Task<Void> tache = new Task<>() {
+                @Override
+                protected Void call() {
+                    dao.supprimer(sel.getIdLivre());
+                    return null;
+                }
+            };
+
+            tache.setOnSucceeded(e -> {
+                racine.getChildren().remove(overlay);
+                btnSupprimer.setDisable(false);
                 chargerLivres();
                 desactiverBoutons();
-            }
+            });
+
+            tache.setOnFailed(e -> {
+                racine.getChildren().remove(overlay);
+                btnSupprimer.setDisable(false);
+                new Alert(Alert.AlertType.ERROR, "Erreur lors de la suppression.").showAndWait();
+            });
+
+            new Thread(tache).start();
         });
     }
 
     // ── Sauvegarder ──────────────────────────────────────────
     @FXML
-    private void onSauvegarder() {
-        if (!validerFormulaire()) return;
+private void onSauvegarder() {
+    if (!validerFormulaire()) return;
 
-        Integer annee = null;
-        try { annee = Integer.parseInt(fieldAnnee.getText().trim()); } catch (NumberFormatException ignored) {}
+    final String titre   = fieldTitre.getText().trim();
+    final String auteur  = fieldAuteur.getText().trim();
+    final String genre   = comboGenreForm.getValue();
+    final String isbn    = fieldIsbn.getText().trim();
+    final String image   = fieldImageCouverture.getText().trim();
+    final int    nbExemp = spinnerExemplaires.getValue();
+    Integer annee = null;
+    try { annee = Integer.parseInt(fieldAnnee.getText().trim()); } catch (NumberFormatException ignored) {}
+    final Integer anneeF = annee;
+    final Livre cible = livreEnCours;
 
-        if (livreEnCours == null) {
-            Livre nouveau = new Livre(
-        0,
-        fieldTitre.getText().trim(),
-        fieldAuteur.getText().trim(),
-        comboGenreForm.getValue(),
-        annee,
-        fieldIsbn.getText().trim(),
-        spinnerExemplaires.getValue(),
-        spinnerExemplaires.getValue(),
-        null,
-        fieldImageCouverture.getText().trim()
-);
-            dao.ajouter(nouveau);
-        } else {
-            livreEnCours.setTitre(fieldTitre.getText().trim());
-            livreEnCours.setAuteur(fieldAuteur.getText().trim());
-            livreEnCours.setGenre(comboGenreForm.getValue());
-            livreEnCours.setAnnee (annee) ;
-            livreEnCours.setIsbn(fieldIsbn.getText().trim());
-            livreEnCours.setImageCouverture(fieldImageCouverture.getText().trim());
-            livreEnCours.setNombreExemplaires(spinnerExemplaires.getValue());
-            dao.modifier(livreEnCours);
+    StackPane overlay = ChargementUtil.creerOverlay();
+    javafx.scene.layout.HBox racine = (javafx.scene.layout.HBox) panneauFormulaire.getParent();
+    racine.getChildren().add(overlay);
+    ChargementUtil.afficher(overlay);
+    btnSauvegarder.setDisable(true);
+
+    Task<Void> tache = new Task<>() {
+        @Override
+        protected Void call() {
+            if (cible == null) {
+                dao.ajouter(new Livre(0, titre, auteur, genre, anneeF, isbn, nbExemp, nbExemp, null, image));
+            } else {
+                cible.setTitre(titre);
+                cible.setAuteur(auteur);
+                cible.setGenre(genre);
+                cible.setAnnee(anneeF);
+                cible.setIsbn(isbn);
+                cible.setImageCouverture(image);
+                cible.setNombreExemplaires(nbExemp);
+                dao.modifier(cible);
+            }
+            return null;
         }
+    };
 
+    tache.setOnSucceeded(e -> {
+        racine.getChildren().remove(overlay);
+        btnSauvegarder.setDisable(false);
         chargerLivres();
         fermerPanneau();
-    }
+    });
+
+    tache.setOnFailed(e -> {
+        racine.getChildren().remove(overlay);
+        btnSauvegarder.setDisable(false);
+        afficherErreur(true, "Erreur lors de l'enregistrement.");
+    });
+
+    new Thread(tache).start();
+}
 
     // ── Panneau ───────────────────────────────────────────────
     @FXML private void onFermerPanneau() { fermerPanneau(); }

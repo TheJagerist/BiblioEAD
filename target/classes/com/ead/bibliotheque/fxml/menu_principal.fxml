@@ -10,103 +10,97 @@
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.ead.bibliotheque.controllers.MenuPrincipalController"
-            styleClass="fond-application"
+            fx:id="rootPane"
+            styleClass="app-shell"
             stylesheets="@../css/styles.css">
 
     <!-- SIDEBAR GAUCHE -->
     <left>
-        <VBox styleClass="barre-laterale" prefWidth="200">
+        <VBox styleClass="barre-laterale" prefWidth="220">
 
-            <!-- Zone logo / titre module -->
-            <StackPane styleClass="titre-module" prefHeight="60">
-                <Text text="BiblioEAD" styleClass="titre-module"/>
+            <StackPane styleClass="titre-module" prefHeight="82">
+                <VBox alignment="CENTER" spacing="3">
+                    <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/logo_ead.png"/>
+                        </image>
+                    </ImageView>
+                    <Text text="BiblioEAD" styleClass="brand-name"/>
+                </VBox>
             </StackPane>
 
             <!-- Navigation principale -->
-            <VBox spacing="2" VBox.vgrow="ALWAYS">
-            <padding><Insets top="12"/></padding>
+            <VBox spacing="8" VBox.vgrow="ALWAYS" styleClass="nav-zone">
+            <padding><Insets top="22" right="14" bottom="14" left="14"/></padding>
 
-                <Button fx:id="btnDashboard" id="btnDashboard" text="Tableau de bord"
+                <Label text="NAVIGATION" styleClass="nav-caption"/>
+
+                <Button fx:id="btnDashboard" id="btnDashboard" text="▦   Tableau de bord"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
-                    <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnAdherents" id="btnAdherents" text="Adhérents"
+                <Button fx:id="btnAdherents" id="btnAdherents" text="♟   Adhérents"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
-                    <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnCatalogue" id="btnCatalogue" text="Catalogue"
+                <Button fx:id="btnCatalogue" id="btnCatalogue" text="▤   Catalogue"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
-                    <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
 
-                <Button fx:id="btnEmprunts" id="btnEmprunts" text="Gestion des Activités"
+                <Button fx:id="btnEmprunts" id="btnEmprunts" text="↻   Activités"
                         styleClass="lien-navigation"
                         maxWidth="Infinity" alignment="CENTER_LEFT"
                         onAction="#handleNav">
-                    <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
                 </Button>
             </VBox>
 
-            <!-- Gestion des admins -->
-             <Button fx:id="btnParametres" id="btnParametres" text="Gestion des admins"
-                    styleClass="lien-navigation"
-                    maxWidth="Infinity" alignment="CENTER_LEFT"
-                    onAction="#handleNav">
-                <padding><Insets top="10" right="16" bottom="10" left="16"/></padding>
-            </Button>
-
-            <!-- Bouton déconnexion en bas -->
-            <Button fx:id="btnDeconnexion" id="btnDeconnexion" text="Déconnexion"
-                    styleClass="bouton-action"
-                    maxWidth="Infinity"
-                    onAction="#handleDeconnexion">
-                <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
-            </Button>
+            <VBox spacing="8" styleClass="nav-footer">
+                <Label text="ADMINISTRATION" styleClass="nav-caption"/>
+                <Button fx:id="btnParametres" id="btnParametres" text="⚙   Gestion des admins"
+                        styleClass="lien-navigation" maxWidth="Infinity" alignment="CENTER_LEFT" onAction="#handleNav"/>
+                <Button fx:id="btnDeconnexion" id="btnDeconnexion" text="↗   Déconnexion"
+                        styleClass="bouton-action nav-logout" maxWidth="Infinity" onAction="#handleDeconnexion"/>
+            </VBox>
 
         </VBox>
     </left>
 
     <!-- ZONE PRINCIPALE -->
     <center>
-        <VBox>
+        <VBox styleClass="zone-contenu">
 
             <!-- TOPBAR -->
-            <HBox styleClass="barre-actions" alignment="CENTER_LEFT"
-                  spacing="12" prefHeight="50">
-                <padding><Insets top="0" right="20" bottom="0" left="20"/></padding>
-
-                <Label fx:id="labelTitreVue" text="Tableau de bord"
-                       styleClass="lien-navigation" style="-fx-font-size:15px;">
-                    <HBox.margin><Insets right="0"/></HBox.margin>
-                </Label>
+            <HBox styleClass="barre-actions" alignment="CENTER_LEFT" spacing="12" prefHeight="88"
+                  onMousePressed="#handleDebutDeplacement" onMouseDragged="#handleDeplacement">
+                <padding><Insets top="13" right="28" bottom="9" left="28"/></padding>
+                <VBox spacing="1">
+                    <Label text="BIBLIOTHÈQUE SCOLAIRE" styleClass="topbar-caption"/>
+                    <Label fx:id="labelTitreVue" text="Tableau de bord" styleClass="topbar-title"/>
+                </VBox>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <!-- Avatar + nom admin -->
-                <HBox fx:id="hboxProfil"
-                      alignment="CENTER" spacing="8"
-                      style="-fx-cursor:hand;"
-                      focusTraversable="true">
-                    <StackPane prefWidth="32" prefHeight="32"
-                               style="-fx-background-color:#333333; -fx-background-radius:16;">
-                        <Label fx:id="labelAvatar" text="AB"
-                               style="-fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold;"/>
+                <HBox fx:id="hboxProfil" alignment="CENTER" spacing="9" styleClass="profil-compact" focusTraversable="true">
+                    <StackPane prefWidth="38" prefHeight="38" styleClass="avatar-admin">
+                        <Label fx:id="labelAvatar" text="AB" styleClass="avatar-admin-text"/>
                     </StackPane>
-                    <Label fx:id="labelAdmin" text="Admin Biblio"
-                           style="-fx-font-size:12px; -fx-text-fill:#555555;"/>
+                    <Label fx:id="labelAdmin" text="Admin Biblio" styleClass="admin-name"/>
+                </HBox>
+                <HBox spacing="3" styleClass="window-controls">
+                    <Button text="—" styleClass="window-control" onAction="#handleMinimiser"/>
+                    <Button text="□" styleClass="window-control" onAction="#handleMaximiser"/>
+                    <Button text="×" styleClass="window-control window-control-close" onAction="#handleFermer"/>
                 </HBox>
             </HBox>
 
             <!-- CONTENU DYNAMIQUE -->
-            <StackPane fx:id="contenuPrincipal" VBox.vgrow="ALWAYS">
+            <StackPane fx:id="contenuPrincipal" VBox.vgrow="ALWAYS" styleClass="contenu-principal">
                 <!-- Les vues (Dashboard, Adhérents, etc.) seront chargées ici via FXMLLoader -->
             </StackPane>
 

@@ -1,5 +1,8 @@
 package com.ead.bibliotheque.controllers;
 
+import com.ead.bibliotheque.util.ChargementUtil;
+import javafx.concurrent.Task;
+import javafx.scene.layout.StackPane;
 import com.ead.bibliotheque.dao.AdherentDAO;
 import com.ead.bibliotheque.dao.AdministrateurDAO;
 import com.ead.bibliotheque.dao.EmpruntDAO;
@@ -85,12 +88,36 @@ public class MonProfilController implements Initializable {
         Administrateur admin = SessionManager.getAdministrateurConnecte();
         if (admin == null) return;
         if (nouveau.equals(admin.getLogin())) { erreurLogin("C'est déjà votre login actuel."); return; }
-        if (!dao.mettreAJourLogin(admin.getIdAdmin(), nouveau)) {
-            erreurLogin("Login déjà utilisé ou erreur base de données."); return;
-        }
-        admin.setLogin(nouveau);
-        labelLoginProfil.setText("@" + nouveau);
-        succes(labelSuccesLogin, "Login modifié avec succès.");
+
+        StackPane overlay = ChargementUtil.creerOverlay();
+        StackPane root = getContenuPrincipal();
+        root.getChildren().add(overlay);
+        ChargementUtil.afficher(overlay);
+
+        Task<Boolean> tache = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return dao.mettreAJourLogin(admin.getIdAdmin(), nouveau);
+            }
+        };
+
+        tache.setOnSucceeded(e -> {
+            root.getChildren().remove(overlay);
+            if (tache.getValue()) {
+                admin.setLogin(nouveau);
+                labelLoginProfil.setText("@" + nouveau);
+                succes(labelSuccesLogin, "Login modifié avec succès.");
+            } else {
+                erreurLogin("Login déjà utilisé ou erreur base de données.");
+            }
+        });
+
+        tache.setOnFailed(e -> {
+            root.getChildren().remove(overlay);
+            erreurLogin("Erreur lors de la mise à jour.");
+        });
+
+        new Thread(tache).start();
     }
 
     @FXML
@@ -99,22 +126,40 @@ public class MonProfilController implements Initializable {
         String ancien  = fieldAncienMdp.getText();
         String nouveau = fieldNouveauMdp.getText();
         String confirm = fieldConfirmMdp.getText();
-        if (ancien.isBlank() || nouveau.isBlank()) {
-            erreurMdp("Tous les champs sont obligatoires."); return;
-        }
-        if (!nouveau.equals(confirm)) {
-            erreurMdp("Les nouveaux mots de passe ne correspondent pas."); return;
-        }
-        if (nouveau.length() < 6) {
-            erreurMdp("Le mot de passe doit contenir au moins 6 caractères."); return;
-        }
+        if (ancien.isBlank() || nouveau.isBlank()) { erreurMdp("Tous les champs sont obligatoires."); return; }
+        if (!nouveau.equals(confirm)) { erreurMdp("Les nouveaux mots de passe ne correspondent pas."); return; }
+        if (nouveau.length() < 6) { erreurMdp("Le mot de passe doit contenir au moins 6 caractères."); return; }
         Administrateur admin = SessionManager.getAdministrateurConnecte();
         if (admin == null) return;
-        if (!dao.changerMotDePasse(admin.getIdAdmin(), ancien, nouveau)) {
-            erreurMdp("Mot de passe actuel incorrect."); return;
-        }
-        fieldAncienMdp.clear(); fieldNouveauMdp.clear(); fieldConfirmMdp.clear();
-        succes(labelSuccesMdp, "Mot de passe changé avec succès.");
+
+        StackPane overlay = ChargementUtil.creerOverlay();
+        StackPane root = getContenuPrincipal();
+        root.getChildren().add(overlay);
+        ChargementUtil.afficher(overlay);
+
+        Task<Boolean> tache = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return dao.changerMotDePasse(admin.getIdAdmin(), ancien, nouveau);
+            }
+        };
+
+        tache.setOnSucceeded(e -> {
+            root.getChildren().remove(overlay);
+            if (tache.getValue()) {
+                fieldAncienMdp.clear(); fieldNouveauMdp.clear(); fieldConfirmMdp.clear();
+                succes(labelSuccesMdp, "Mot de passe changé avec succès.");
+            } else {
+                erreurMdp("Mot de passe actuel incorrect.");
+            }
+        });
+
+        tache.setOnFailed(e -> {
+            root.getChildren().remove(overlay);
+            erreurMdp("Erreur lors du changement de mot de passe.");
+        });
+
+        new Thread(tache).start();
     }
 
     private void erreurLogin(String msg) {
@@ -136,4 +181,8 @@ public class MonProfilController implements Initializable {
         labelErreurMdp.setVisible(false); labelErreurMdp.setManaged(false);
         labelSuccesMdp.setVisible(false); labelSuccesMdp.setManaged(false);
     }
+
+    private StackPane getContenuPrincipal() {
+    return (StackPane) fieldNouveauLogin.getScene().lookup("#contenuPrincipal");
+}
 }

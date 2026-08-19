@@ -18,6 +18,9 @@ C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibl
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\models\Emprunt.java
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\models\Livre.java
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\models\Retard.java
+C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\ChargementUtil.java
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\DatabaseConnection.java
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\InitAdministrateur.java
+C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\RechercheUtil.java
 C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\SessionManager.java
+C:\Users\jlemk\OneDrive\Documents\GestionBibliotheque\src\main\java\com\ead\bibliotheque\util\StageUtil.java

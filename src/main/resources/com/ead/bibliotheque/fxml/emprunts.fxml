@@ -42,7 +42,7 @@
                         </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <TextField fx:id="fieldRecherche"
-                                           promptText="Adhérent, titre, n° carte..."
+                                           promptText="Adhérent, livre, n° carte, date, statut..."
                                            styleClass="champ-recherche"
                                            HBox.hgrow="ALWAYS"
                                            onKeyReleased="#onRecherche"/>
@@ -100,7 +100,7 @@
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <TextField fx:id="fieldRechercheRetards"
-                                           promptText="Adhérent, livre..."
+                                           promptText="Adhérent, livre, date, sévérité..."
                                            styleClass="champ-recherche"
                                            HBox.hgrow="ALWAYS"
                                            onKeyReleased="#onRechercheRetards"/>
@@ -141,7 +141,7 @@
                             <padding><Insets top="12" right="0" bottom="8" left="0"/></padding>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <TextField fx:id="fieldRechercheHisto"
-                                           promptText="Adhérent, titre, n° carte..."
+                                           promptText="Adhérent, livre, n° carte, date, statut..."
                                            styleClass="champ-recherche"
                                            HBox.hgrow="ALWAYS"
                                            onKeyReleased="#onRechercheHisto"/>
